@@ -10,6 +10,7 @@ import { signIn } from 'next-auth/react'
 const Signup = () => {
   const [spinner, setSpinner] = useState(false)
   const { data: seesion, error } = useSession()
+
   const signin = () => {
     signIn('google', { callbackUrl: '/' })
   }

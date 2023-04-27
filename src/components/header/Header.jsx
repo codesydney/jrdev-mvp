@@ -73,7 +73,7 @@ function Header() {
             <Image src={Logo} className="h-[50px] w-[50px] " />
             <div className="">
               <h3 className=" text-2xl text-white font-semibold">Jr-dev</h3>
-              <p className="text-white">Code.Sydeny</p>
+              <p className="text-white">Code.Sydney</p>
             </div>
           </Link>
           <div onClick={handleClick} className="px-5 flex flex-col gap-[8px]">
