@@ -5,43 +5,44 @@ const Applicantdashboard = () => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
-  const [resume, setResume] = useState()
+  const [resumeFile, setResumeFile] = useState(null)
 
   const { data: session, error } = useSession()
 
   const resumeHandler = (e) => {
     const file = e.target.files[0]
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const content = event.target.result
-      setResume(content)
-    }
+    setResumeFile(file)
+    // const reader = new FileReader()
+    // reader.onload = (event) => {
+    //   const content = event.target.result
+    //   setResume(content)
+    // }
     // console.log('resume', resume)
     // console.log('resume file', resume.target.files[0])
   }
 
-  // const handleUpload = async () => {
-  //   try {
-  //     if (resume.length > 0) {
-  //       if (resume[0].file) {
-  //         const { data, error: uploadError } = await supabase.storage
-  //           .from('resume')
-  //           .upload('resume/' + file?.name, file)
-  //         if (uploadError) {
-  //           throw uploadError
-  //         }
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.log('error:', error)
-  //   }
-  // }
+  const handleUpload = async () => {
+    console.log('resume', resumeFile)
+
+    try {
+      if (resumeFile) {
+        const { data, error: uploadError } = await supabase.storage
+          .from('resume')
+          .upload('resume/' + resumeFile.name, resumeFile)
+        if (uploadError) {
+          throw uploadError
+        }
+      }
+    } catch (error) {
+      console.log('error:', error)
+    }
+  }
 
   const handleSubmit = async () => {
     if (name && phone && email) {
       const { data, error } = await supabase
         .from('applicants')
-        .insert([{ id: session.user.id, name, phone, email }])
+        .upsert([{ id: session.user.id, name, phone, email }])
       if (error) {
         console.error('Error submitting form:', error)
       } else {
@@ -75,8 +76,8 @@ const Applicantdashboard = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        {/* <input type="file" accept="image/*" id="file_input" onChange={resumeHandler} />
-        <button onClick={handleUpload}>Upload Resume</button> */}
+        <input type="file" accept="application/pdf" id="file_input" onChange={resumeHandler} />
+        <button onClick={handleUpload}>Upload Resume</button>
         <button
           className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded"
           onClick={handleSubmit}
