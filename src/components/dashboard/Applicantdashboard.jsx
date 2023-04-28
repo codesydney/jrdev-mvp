@@ -12,37 +12,39 @@ const Applicantdashboard = () => {
   const resumeHandler = (e) => {
     const file = e.target.files[0]
     setResumeFile(file)
-    // const reader = new FileReader()
-    // reader.onload = (event) => {
-    //   const content = event.target.result
-    //   setResume(content)
-    // }
-    // console.log('resume', resume)
-    // console.log('resume file', resume.target.files[0])
   }
 
   const handleUpload = async () => {
     console.log('resume', resumeFile)
+  }
 
+  const handleSubmit = async () => {
     try {
       if (resumeFile) {
-        const { data, error: uploadError } = await supabase.storage
-          .from('resume')
-          .upload('resume/' + resumeFile.name, resumeFile)
-        if (uploadError) {
-          throw uploadError
-        }
       }
     } catch (error) {
       console.log('error:', error)
     }
-  }
 
-  const handleSubmit = async () => {
-    if (name && phone && email) {
+    if (name && phone && email && resumeFile) {
+      // upload resume to storage
+      const { data: file, error: uploadError } = await supabase.storage
+        .from('resume')
+        .upload('resume/' + resumeFile.name, resumeFile)
+      console.log('file', file)
+      if (uploadError) {
+        throw uploadError
+      }
+
+      //get resume url from storage
+      const resp = await supabase.storage.from('resume').getPublicUrl('resume/' + resumeFile.name)
+      const resumeUrl = resp.data.publicUrl
+      console.log('resumeUrl', resumeUrl)
+
+      // insert applicant data to db
       const { data, error } = await supabase
         .from('applicants')
-        .upsert([{ id: session.user.id, name, phone, email }])
+        .upsert([{ id: session.user.id, name, phone, email, resume_url: resumeUrl }])
       if (error) {
         console.error('Error submitting form:', error)
       } else {
