@@ -17,16 +17,17 @@ const Applicantdashboard = () => {
   const handleSubmit = async () => {
     if (name && phone && email && resumeFile) {
       // upload resume to storage
+      const resumeBucketPath = `resume/${session.user.id}/${resumeFile.name}`
       const { data: file, error: uploadError } = await supabase.storage
         .from('resume')
-        .upload('resume/' + resumeFile.name, resumeFile)
+        .upload(resumeBucketPath, resumeFile)
       console.log('file', file)
       if (uploadError) {
         throw uploadError
       }
 
       //get resume url from storage
-      const resp = await supabase.storage.from('resume').getPublicUrl('resume/' + resumeFile.name)
+      const resp = await supabase.storage.from('resume').getPublicUrl(resumeBucketPath)
       const resumeUrl = resp.data.publicUrl
       console.log('resumeUrl', resumeUrl)
 
@@ -68,13 +69,26 @@ const Applicantdashboard = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
+          {/* <input
             type="file"
             accept="application/pdf"
             id="file_input"
             onChange={resumeHandler}
             className="w-full p-2 mb-6  border-gray-300 "
-          />
+          /> */}
+          <label
+            htmlFor="file_input"
+            className="w-full p-2 mb-6 border border-gray-300 rounded cursor-pointer flex items-center justify-center"
+          >
+            <span>Upload Resume</span>
+            <input
+              type="file"
+              accept="application/pdf"
+              id="file_input"
+              onChange={resumeHandler}
+              className="hidden"
+            />
+          </label>
           <button
             className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded mt-6"
             onClick={handleSubmit}
