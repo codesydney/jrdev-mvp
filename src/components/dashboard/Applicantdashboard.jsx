@@ -14,18 +14,7 @@ const Applicantdashboard = () => {
     setResumeFile(file)
   }
 
-  const handleUpload = async () => {
-    console.log('resume', resumeFile)
-  }
-
   const handleSubmit = async () => {
-    try {
-      if (resumeFile) {
-      }
-    } catch (error) {
-      console.log('error:', error)
-    }
-
     if (name && phone && email && resumeFile) {
       // upload resume to storage
       const { data: file, error: uploadError } = await supabase.storage
@@ -54,40 +43,47 @@ const Applicantdashboard = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold mb-6">Application Form</h2>
-        <input
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-          type="tel"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <input
-          className="w-full p-2 mb-6 border border-gray-300 rounded"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input type="file" accept="application/pdf" id="file_input" onChange={resumeHandler} />
-        <button onClick={handleUpload}>Upload Resume</button>
-        <button
-          className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+    <>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-full max-w-md  p-4 sm:p-8 bg-white rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-6">Application Form</h2>
+          <input
+            className="w-full p-2 mb-4 border border-gray-500 rounded"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            type="tel"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+          <input
+            className="w-full p-2 mb-6 border border-gray-300 rounded"
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="file"
+            accept="application/pdf"
+            id="file_input"
+            onChange={resumeHandler}
+            className="w-full p-2 mb-6  border-gray-300 "
+          />
+          <button
+            className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded mt-6"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
 
