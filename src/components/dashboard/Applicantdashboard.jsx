@@ -10,6 +10,18 @@ const Applicantdashboard = () => {
 
   const { data: session, error } = useSession()
 
+  const nameHandler = (e) => {
+    setName(e.target.value)
+  }
+
+  const phoneHandler = (e) => {
+    setPhone(e.target.value)
+  }
+
+  const emailHandler = (e) => {
+    setEmail(e.target.value)
+  }
+
   const resumeHandler = (e) => {
     const file = e.target.files[0]
     setResumeFile(file)
@@ -38,8 +50,6 @@ const Applicantdashboard = () => {
         .upsert([{ id: session.user.id, name, phone, email, resume_url: resumeUrl }])
       if (error) {
         console.error('Error submitting form:', error)
-      } else {
-        console.log('Submitted successfully:', data)
       }
     }
   }
@@ -53,21 +63,21 @@ const Applicantdashboard = () => {
           type="text"
           placeholder="Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={nameHandler}
         />
         <input
           className="w-full p-2 mb-4 border rounded"
           type="tel"
           placeholder="Phone"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={phoneHandler}
         />
         <input
           className="w-full p-2 mb-6 border rounded"
           type="email"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={emailHandler}
         />
         {resumePreviewUrl && (
           <div className="border rounded p-2 mb-6">
@@ -90,8 +100,6 @@ const Applicantdashboard = () => {
             className="hidden"
           />
         </label>
-        {/* {resumeFile ? <div className="mb-2">{resumeFile.name}</div> : ''} */}
-
         <button
           className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded mt-6"
           onClick={handleSubmit}
