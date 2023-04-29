@@ -6,12 +6,14 @@ const Applicantdashboard = () => {
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [resumeFile, setResumeFile] = useState(null)
+  const [resumePreviewUrl, setResumePreviewUrl] = useState('')
 
   const { data: session, error } = useSession()
 
   const resumeHandler = (e) => {
     const file = e.target.files[0]
     setResumeFile(file)
+    setResumePreviewUrl(URL.createObjectURL(file))
   }
 
   const handleSubmit = async () => {
@@ -21,7 +23,6 @@ const Applicantdashboard = () => {
       const { data: file, error: uploadError } = await supabase.storage
         .from('resume')
         .upload(resumeBucketPath, resumeFile)
-      console.log('file', file)
       if (uploadError) {
         throw uploadError
       }
@@ -44,60 +45,61 @@ const Applicantdashboard = () => {
   }
 
   return (
-    <>
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="w-full max-w-md  p-4 sm:p-8 bg-white rounded-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-6">Application Form</h2>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md  p-4 sm:p-8 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-semibold mb-6">Application Form</h2>
+        <input
+          className="w-full p-2 mb-4 border rounded"
+          type="text"
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          className="w-full p-2 mb-4 border rounded"
+          type="tel"
+          placeholder="Phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <input
+          className="w-full p-2 mb-6 border rounded"
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        {resumePreviewUrl && (
+          <div className="border rounded p-2 mb-6">
+            <a href={resumePreviewUrl} target="_blank" rel="noopener noreferrer" className="">
+              <span>Preview Resume:</span>
+              {resumeFile.name}
+            </a>
+          </div>
+        )}
+        <label
+          htmlFor="file_input"
+          className="w-1/2 p-2  border rounded cursor-pointer flex items-center justify-center"
+        >
+          {resumeFile ? <span>Update Resume</span> : <span>Upload Resume</span>}
           <input
-            className="w-full p-2 mb-4 border border-gray-500 rounded"
-            type="text"
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
-            type="tel"
-            placeholder="Phone"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <input
-            className="w-full p-2 mb-6 border border-gray-300 rounded"
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {/* <input
             type="file"
             accept="application/pdf"
             id="file_input"
             onChange={resumeHandler}
-            className="w-full p-2 mb-6  border-gray-300 "
-          /> */}
-          <label
-            htmlFor="file_input"
-            className="w-full p-2 mb-6 border border-gray-300 rounded cursor-pointer flex items-center justify-center"
-          >
-            <span>Upload Resume</span>
-            <input
-              type="file"
-              accept="application/pdf"
-              id="file_input"
-              onChange={resumeHandler}
-              className="hidden"
-            />
-          </label>
-          <button
-            className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded mt-6"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </div>
+            className="hidden"
+          />
+        </label>
+        {/* {resumeFile ? <div className="mb-2">{resumeFile.name}</div> : ''} */}
+
+        <button
+          className="w-full px-4 py-2 font-semibold text-black bg-indigo-200 rounded mt-6"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
       </div>
-    </>
+    </div>
   )
 }
 
