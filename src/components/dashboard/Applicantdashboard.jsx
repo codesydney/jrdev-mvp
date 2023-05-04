@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import supabase from '@/lib/supabaseClient'
-import { GrDocumentUpload } from 'react-icons/gr'
+import { GrDocumentUpload, GrDocumentPdf } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
 
@@ -111,6 +111,7 @@ const Applicantdashboard = () => {
             >
               <div>
                 <span>Uploaded Resume: </span>
+                <GrDocumentPdf className="text-xl inline-block mr-1" />
                 {resumeFile.name}
               </div>
 
