@@ -35,6 +35,16 @@ export async function getServerSideProps(context) {
 
   const userId = session.user.id
   const res = await supabase.from('users').select('role').eq('id', userId)
+
+  if (!res.data?.length) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
   return {
     props: { role: res.data[0].role }
   }
