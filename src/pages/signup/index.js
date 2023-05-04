@@ -10,6 +10,7 @@ import { signIn } from 'next-auth/react'
 const Signup = () => {
   const [spinner, setSpinner] = useState(false)
   const { data: seesion, error } = useSession()
+
   const signin = () => {
     signIn('google', { callbackUrl: '/' })
   }
@@ -69,7 +70,7 @@ const Signup = () => {
           </form>
           <hr className="mt-6 border-gray-300 w-full " />
           <button
-            onClick={signin()}
+            onClick={signin}
             className="
             relative
             disabled:opacity-70

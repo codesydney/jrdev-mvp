@@ -31,6 +31,8 @@ export default function Home() {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
+  console.log('session: ', session)
+
   if (!session?.user?.id) {
     return {
       props: {}
