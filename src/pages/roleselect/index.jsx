@@ -36,7 +36,7 @@ const Roleselect = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Select your role:</label>
+      <label className="block">Select your role:</label>
       <select value={role} onChange={handleChange}>
         <option value="">-- Select --</option>
         <option value="applicant">Applicant</option>

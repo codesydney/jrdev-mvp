@@ -46,7 +46,7 @@ const Signup = () => {
             className="flex flex-col items-center justify-center"
             onSubmit={handleSubmit}
           >
-            <label>Email</label>
+            <label className="block">Email</label>
             <input
               className="border-2 w-full border-gray-300 p-2 rounded-lg m-2"
               type="email"
@@ -61,7 +61,7 @@ const Signup = () => {
               </p>
             )}
 
-            <label>Password</label>
+            <label className="block">Password</label>
             <input
               className="border-2 w-full border-gray-300 p-2 rounded-lg m-2"
               type="password"

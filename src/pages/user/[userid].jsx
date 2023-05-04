@@ -19,7 +19,7 @@ const User = () => {
   return (
     <div>
       <div>
-        <label>Input your name</label>
+        <label className="block">Input your name</label>
         <input
           type="text"
           name="name"
@@ -31,7 +31,7 @@ const User = () => {
           <p className="text-center text-red-500">Name is required</p>
         )}
 
-        <label>Input your email</label>
+        <label className="block">Input your email</label>
         <input
           type="email"
           name="email"
@@ -45,7 +45,7 @@ const User = () => {
           </p>
         )}
 
-        <label>Input your phone</label>
+        <label className="block">Input your phone</label>
         <input
           type="tel"
           name="phone"
@@ -61,10 +61,12 @@ const User = () => {
         )}
 
         {/*should this be type=file?*/}
-        <label>Input your resume</label>
+        <label className="block">Upload your resume</label>
         <input
           type="file"
           name="resume"
+          accept=".pdf"
+          accessTyp
           //onChange={(e) => setResume(e.target.value)}
           required={true}
         />
