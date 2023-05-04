@@ -72,7 +72,11 @@ const User = () => {
           className="w-full disabled block bg-indigo-100 hover:bg-indigo-200 hover:scale-105 focus:bg-teal-700 text-white font-semibold rounded-lg px-4 py-3 mt-6"
           type="submit"
           onClick={(e) => setResume(e.target.value)}
-        ></input>
+        >
+          <div className="text-center">
+            <i className="fa-light fa-file-arrow-up fa-2xl"></i>
+          </div>
+        </input>
 
         {resume.files.length == 0 && (
           <p className="text-center text-red-500">A Resume is required</p>
