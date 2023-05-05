@@ -1,10 +1,10 @@
-import Layout from '@/components/layout/Layout'
-import Card from '@/components/Card'
-import { getSession } from 'next-auth/react'
-import supabase from '@/lib/supabaseClient'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import Layout from "@/components/layout/Layout";
+import Card from "@/components/Card";
+import { getSession } from "next-auth/react";
+import supabase from "@/lib/supabaseClient";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 export default function Home() {
   return (
     <Layout style="flex flex-col items-center">
@@ -26,32 +26,34 @@ export default function Home() {
         </div>
       </article>
     </Layout>
-  )
+  );
 }
 
 export async function getServerSideProps(context) {
+
   const session = await getSession(context)
   console.log('session: ', session)
 
+
   if (!session?.user?.id) {
     return {
-      props: {}
-    }
+      props: {},
+    };
   }
 
-  const userId = session.user.id
-  const res = await supabase.from('users').select('role').eq('id', userId)
-  const role = res.data[0]?.role ?? null
+  const userId = session.user.id;
+  const res = await supabase.from("users").select("role").eq("id", userId);
+  const role = res.data[0]?.role ?? null;
   if (role === null) {
     return {
       redirect: {
-        destination: '/roleselect',
-        permanent: false
-      }
-    }
+        destination: "/roleselect",
+        permanent: false,
+      },
+    };
   }
 
   return {
-    props: {}
-  }
+    props: {},
+  };
 }
