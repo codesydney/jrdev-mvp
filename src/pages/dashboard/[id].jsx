@@ -1,7 +1,7 @@
 import { useSession } from 'next-auth/react'
-import { useState, useEffect } from 'react'
-import Roleselect from '@/pages/roleselect'
+import { getSession } from 'next-auth/react'
 import supabase from '@/lib/supabaseClient'
+import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
 
 const Dashboard = ({ role }) => {
   const { data: session, status } = useSession()
@@ -16,7 +16,7 @@ const Dashboard = ({ role }) => {
 
   return (
     <>
-      {role === 'applicant' && <div>applicant dashboard</div>}
+      {role === 'applicant' && <Applicantdashboard />}
       {role === 'recruiter' && <div>recruiter dashboard</div>}
     </>
   )

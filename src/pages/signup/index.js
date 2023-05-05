@@ -8,17 +8,9 @@ import Image from "next/image";
 import { signIn } from "next-auth/react";
 
 const Signup = () => {
-  const [spinner, setSpinner] = useState(false);
-  const { data: seesion, error } = useSession();
-  const [formInput, setFormInput] = useState({
-    email: "",
-    password: "",
-  });
 
-  const [successMessage, setSuccessMessage] = "";
-
-  let emailRegex =
-    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  const [spinner, setSpinner] = useState(false)
+  const { data: seesion, error } = useSession()
 
   const signin = () => {
     signIn("google", { callbackUrl: "/" });
@@ -114,12 +106,9 @@ const Signup = () => {
           </form>
           <hr className="mt-6 border-gray-300 w-full " />
           <button
-            disabled={
-              !formInput.email ||
-              !formInput.password ||
-              !emailRegex.test(formInput.email)
-            }
-            onClick={signin()}
+
+            onClick={signin}
+
             className="
             relative
             disabled:opacity-70
