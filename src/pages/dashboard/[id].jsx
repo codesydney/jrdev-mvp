@@ -1,11 +1,11 @@
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
-import supabase from '@/lib/useSupabaseClient'
+import useSupabaseClient from '@/lib/supabaseClient'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
+import { createSupabaseClient } from '@/lib/supabaseClient'
 
 const Dashboard = ({ role }) => {
   const { data: session, status } = useSession()
-
   if (status === 'unauthenticated') {
     return <div>Access denied. Please log in. Redirect to login page then.</div>
   }
@@ -32,7 +32,7 @@ export async function getServerSideProps(context) {
       }
     }
   }
-
+  const supabase = createSupabaseClient(session.supabaseAccessToken)
   const userId = session.user.id
   const res = await supabase.from('users').select('role').eq('id', userId)
 

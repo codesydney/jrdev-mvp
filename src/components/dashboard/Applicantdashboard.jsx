@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import supabase from '@/lib/useSupabaseClient'
+import useSupabaseClient from '@/lib/supabaseClient'
 import { GrDocumentUpload, GrDocumentPdf } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
-
+import { createSupabaseClient } from '@/lib/supabaseClient'
 const Applicantdashboard = () => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -12,7 +12,7 @@ const Applicantdashboard = () => {
   const [resumePreviewUrl, setResumePreviewUrl] = useState('')
 
   const { data: session, error } = useSession()
-
+  const supabase = createSupabaseClient(session.supabaseAccessToken)
   const nameHandler = (e) => {
     setName(e.target.value)
   }
