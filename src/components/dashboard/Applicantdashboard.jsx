@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import supabase from '@/lib/supabaseClient'
+import supabase from '@/lib/useSupabaseClient'
 import { GrDocumentUpload, GrDocumentPdf } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'

@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
-import supabase from '@/lib/supabaseClient'
+import supabase from '@/lib/useSupabaseClient'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
 
 const Dashboard = ({ role }) => {

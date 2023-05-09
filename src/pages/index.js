@@ -1,7 +1,7 @@
 import Layout from '@/components/layout/Layout'
 import Card from '@/components/Card'
 import { getSession } from 'next-auth/react'
-import supabase from '@/lib/supabaseClient'
+import supabase from '@/lib/useSupabaseClient'
 import { useSession } from 'next-auth/react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
