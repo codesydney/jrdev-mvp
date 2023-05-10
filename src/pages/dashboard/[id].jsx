@@ -1,6 +1,5 @@
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
-import useSupabaseClient from '@/lib/supabaseClient'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 

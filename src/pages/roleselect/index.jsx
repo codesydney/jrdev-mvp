@@ -9,32 +9,33 @@ const Roleselect = () => {
   const { data: session, status } = useSession()
   console.log('session: ', session)
 
-  const supabase = createSupabaseClient(session?.supabaseAccessToken)
-
-  const handleChange = (event) => {
-    setRole(event.target.value)
-  }
-
-  const handleSubmit = async (event) => {
-    event.preventDefault()
-    try {
-      const { data, error } = await supabase
-        .from('users')
-        .update({ role })
-        .eq('id', session.user.id)
-      if (error) throw error
-      router.push('/')
-    } catch (error) {
-      console.log('error', error)
-    }
-  }
-
   if (status === 'loading') {
     return <div>Loading...</div>
   }
-  return (
-    <div>
-      {session ? (
+
+  if (session) {
+    const supabase = createSupabaseClient(session.supabaseAccessToken)
+
+    const handleChange = (event) => {
+      setRole(event.target.value)
+    }
+
+    const handleSubmit = async (event) => {
+      event.preventDefault()
+      try {
+        const { data, error } = await supabase
+          .from('users')
+          .update({ role })
+          .eq('id', session.user.id)
+        if (error) throw error
+        router.push('/')
+      } catch (error) {
+        console.log('error', error)
+      }
+    }
+
+    return (
+      <div>
         <form onSubmit={handleSubmit}>
           <label>
             Select your role:
@@ -46,11 +47,9 @@ const Roleselect = () => {
           </label>
           <button type="submit">Next</button>
         </form>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div>
-  )
+      </div>
+    )
+  }
 }
 
 export default Roleselect

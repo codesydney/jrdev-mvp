@@ -9,10 +9,14 @@ import { signIn } from 'next-auth/react'
 
 const Signup = () => {
   const [spinner, setSpinner] = useState(false)
-  const { data: seesion, error } = useSession()
+  const { data: seesion, status } = useSession()
 
   const signin = () => {
     signIn('google', { callbackUrl: '/' })
+  }
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
   }
 
   return (

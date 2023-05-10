@@ -1,10 +1,8 @@
 import Layout from '@/components/layout/Layout'
 import Card from '@/components/Card'
 import { getSession } from 'next-auth/react'
-import useSupabaseClient from '@/lib/supabaseClient'
-import { useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
+import { createSupabaseClient } from '@/lib/supabaseClient'
+
 export default function Home() {
   return (
     <Layout style="flex flex-col items-center">
@@ -31,14 +29,12 @@ export default function Home() {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context)
-  const supabase = useSupabaseClient()
-  console.log('session: ', session)
-
   if (!session?.user?.id) {
     return {
       props: {}
     }
   }
+  const supabase = createSupabaseClient(session.supabaseAccessToken)
 
   const userId = session.user.id
   const res = await supabase.from('users').select('role').eq('id', userId)
