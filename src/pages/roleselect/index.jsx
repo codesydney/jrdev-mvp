@@ -7,7 +7,7 @@ const Roleselect = () => {
   const [role, setRole] = useState('applicant')
   const router = useRouter()
   const { data: session, status } = useSession()
-  console.log('session: ', session)
+  const [errorMessage, setErrorMessage] = ''
 
   if (status === 'loading') {
     return <div>Loading...</div>
@@ -17,7 +17,14 @@ const Roleselect = () => {
     const supabase = createSupabaseClient(session.supabaseAccessToken)
 
     const handleChange = (event) => {
-      setRole(event.target.value)
+      const selectedValue = event.target.value
+      if (selectedValue === '') {
+        // Handle the case where the user has not selected a role
+        setErrorMessage('Please select a role.')
+      } else {
+        // Handle the case where the user has selected a role
+        setRole(selectedValue)
+      }
     }
 
     const handleSubmit = async (event) => {
@@ -35,19 +42,19 @@ const Roleselect = () => {
     }
 
     return (
-      <div>
-        <form onSubmit={handleSubmit}>
-          <label>
-            Select your role:
-            <select value={role} onChange={handleChange}>
-              <option value="">-- Select --</option>
-              <option value="applicant">Applicant</option>
-              <option value="recruiter">Recruiter</option>
-            </select>
-          </label>
-          <button type="submit">Next</button>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit}>
+        <label className="block">Select your role:</label>
+        <select value={role} onChange={handleChange}>
+          <option value="">-- Select --</option>
+          <option value="applicant">Applicant</option>
+          <option value="recruiter">Recruiter</option>
+        </select>
+        <button type="submit" disabled={role === ''}>
+          Next
+        </button>
+
+        <p className="text-center text-red-500">{errorMessage}</p>
+      </form>
     )
   }
 }
