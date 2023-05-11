@@ -3,8 +3,9 @@ import { getSession } from 'next-auth/react'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const Dashboard = ({ role }) => {
+const Dashboard = ({ role, applicant }) => {
   const { data: session, status } = useSession()
+
   if (status === 'unauthenticated') {
     return <div>Access denied. Please log in. Redirect to login page then.</div>
   }
@@ -15,7 +16,7 @@ const Dashboard = ({ role }) => {
 
   return (
     <>
-      {role === 'applicant' && <Applicantdashboard />}
+      {role === 'applicant' && <Applicantdashboard applicant={applicant} />}
       {role === 'recruiter' && <div>recruiter dashboard</div>}
     </>
   )
@@ -26,26 +27,45 @@ export async function getServerSideProps(context) {
   if (!session?.user?.id) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/signup',
         permanent: false
       }
     }
   }
   const supabase = createSupabaseClient(session.supabaseAccessToken)
   const userId = session.user.id
-  const res = await supabase.from('users').select('role').eq('id', userId)
+  const users = await supabase.from('users').select('role').limit(1).single().eq('id', userId)
 
-  if (!res.data?.length) {
+  if (!users.data) {
     return {
       redirect: {
-        destination: '/login',
+        destination: '/signup',
         permanent: false
       }
     }
   }
 
+  if (users.data.role === 'applicant') {
+    const applicant = await supabase
+      .from('applicants')
+      .select()
+      .limit(1)
+      .single()
+      .eq('users_id', userId)
+    console.log('applicant: ', applicant.data)
+    if (!applicant.data) {
+      return {
+        props: {}
+      }
+    } else {
+      return {
+        props: { role: users.data.role, applicant: applicant.data }
+      }
+    }
+  }
+
   return {
-    props: { role: res.data[0].role }
+    props: { role: users.data.role, applicant: applicant.data }
   }
 }
 

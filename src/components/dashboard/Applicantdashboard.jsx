@@ -33,18 +33,25 @@ const Applicantdashboard = () => {
     setResumePreviewUrl(URL.createObjectURL(file))
   }
 
+  // const {data: applicant, error: applicantError} = await supabase.from('applicant').select().eq('users_id', session.user.id)
+
+  // const deletePreviousResume = async () => {}
+
   const handleSubmit = async () => {
     if (name && phone && email && resumeFile) {
       // upload resume to storage
-      const resumeBucketPath = `resume/${session.user.id}/${resumeFile.name}`
+      const resumeBucketPath = `${session.user.id}/${resumeFile.name}`
+
       const { data: file, error: uploadError } = await supabase.storage
         .from('resume')
         .upload(resumeBucketPath, resumeFile)
       if (uploadError) {
+        console.log('uploadError: ', uploadError)
         throw uploadError
       }
 
       //get resume url from storage
+      console.log('pass the upload')
       const resp = await supabase.storage.from('resume').getPublicUrl(resumeBucketPath)
       const resumeUrl = resp.data.publicUrl
       console.log('resumeUrl', resumeUrl)
@@ -52,7 +59,14 @@ const Applicantdashboard = () => {
       // insert applicant data to db
       const { data, error } = await supabase
         .from('applicants')
-        .upsert([{ id: session.user.id, name, phone, email, resume_url: resumeUrl }])
+        .upsert({
+          name,
+          phone,
+          email,
+          resume_url: resumeUrl,
+          users_id: session.user.id
+        })
+        .eq('users_id', 'b9210e4c-9f4a-4379-bb04-64c6edce46bb')
       if (error) {
         console.error('Error submitting form:', error)
       }
