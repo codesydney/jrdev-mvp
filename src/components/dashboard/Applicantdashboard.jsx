@@ -81,13 +81,17 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         console.log('update applicant data')
         const { data, error } = await supabase
           .from('applicants')
-          .update({
-            name,
-            phone,
-            email,
-            resume_url: resumeUrl
-          })
+          .update(
+            {
+              name,
+              phone,
+              email,
+              resume_url: resumeUrl
+            },
+            { upsert: true }
+          )
           .eq('users_id', session.user.id)
+
         if (error) {
           console.error('Error updating applicant:', error)
           return
