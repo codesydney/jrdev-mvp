@@ -38,6 +38,7 @@ export async function getServerSideProps(context) {
 
   const userId = session.user.id
   const res = await supabase.from('users').select('role').limit(1).single().eq('id', userId)
+
   const role = res.data.role ?? null
   if (role === null) {
     return {

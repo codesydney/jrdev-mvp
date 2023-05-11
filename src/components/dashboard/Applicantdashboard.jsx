@@ -4,7 +4,7 @@ import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const Applicantdashboard = ({ applicant }) => {
+const Applicantdashboard = ({ applicant, onRefresh }) => {
   console.log('applicant: ', applicant)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
@@ -76,6 +76,8 @@ const Applicantdashboard = ({ applicant }) => {
         console.error('Error submitting form:', error)
       }
     }
+    setResumePreviewUrl('')
+    onRefresh()
   }
 
   if (status === 'loading') {
@@ -111,7 +113,7 @@ const Applicantdashboard = ({ applicant }) => {
           htmlFor="file_input"
           className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center"
         >
-          {resumeFile ? (
+          {resumeFile || applicant?.resume_url ? (
             <span className="text-l">Update Resume</span>
           ) : (
             <span className="text-l">Upload Resume</span>
@@ -128,7 +130,7 @@ const Applicantdashboard = ({ applicant }) => {
         <div className="text-dark text-lg font-semibold mt-4">
           <p className="">Uploaded Resume: </p>
         </div>
-        {applicant.resume_url ? (
+        {applicant?.resume_url ? (
           <div className="border-[3px] border-dark rounded p-2 mt-4">
             <a href={applicant.resume_url} target="_blank" className="flex justify-between">
               <div>
