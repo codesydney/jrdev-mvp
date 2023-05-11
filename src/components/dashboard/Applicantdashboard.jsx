@@ -42,6 +42,20 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
     setResumePreviewUrl(URL.createObjectURL(file))
   }
 
+  const ifApplicantExists = async () => {
+    const { data, error } = await supabase
+      .from('applicants')
+      .select()
+      .limit(1)
+      .single()
+      .eq('users_id', session.user.id)
+    if (error) {
+      console.error('Error fetching applicant:', error)
+      return
+    }
+    return data
+  }
+
   const handleSubmit = async () => {
     if (name && phone && email && resumeFile) {
       // upload resume to storage
@@ -55,29 +69,48 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         throw uploadError
       }
 
+      // check if applicant exists
+      const applicantExists = await ifApplicantExists()
       //get resume url from storage
       console.log('pass the upload')
       const resp = await supabase.storage.from('resume').getPublicUrl(resumeBucketPath)
       const resumeUrl = resp.data.publicUrl
       console.log('resumeUrl', resumeUrl)
-
-      // insert applicant data to db
-      const { data, error } = await supabase
-        .from('applicants')
-        .upsert({
-          name,
-          phone,
-          email,
-          resume_url: resumeUrl,
-          users_id: session.user.id
-        })
-        .eq('users_id', 'b9210e4c-9f4a-4379-bb04-64c6edce46bb')
-      if (error) {
-        console.error('Error submitting form:', error)
+      if (applicantExists) {
+        // update applicant data
+        console.log('update applicant data')
+        const { data, error } = await supabase
+          .from('applicants')
+          .update({
+            name,
+            phone,
+            email,
+            resume_url: resumeUrl
+          })
+          .eq('users_id', session.user.id)
+        if (error) {
+          console.error('Error updating applicant:', error)
+          return
+        }
+      } else {
+        // insert applicant data to db
+        const { data, error } = await supabase
+          .from('applicants')
+          .insert({
+            name,
+            phone,
+            email,
+            resume_url: resumeUrl,
+            users_id: session.user.id
+          })
+          .eq('users_id', 'b9210e4c-9f4a-4379-bb04-64c6edce46bb')
+        if (error) {
+          console.error('Error submitting form:', error)
+        }
       }
+      setResumePreviewUrl('')
+      onRefresh()
     }
-    setResumePreviewUrl('')
-    onRefresh()
   }
 
   if (status === 'loading') {
