@@ -100,7 +100,7 @@ const Applicantdashboard = ({ applicant }) => {
           onChange={phoneHandler}
         />
         <input
-          className="w-full p-2 mb-6 border-[3px] border-dark rounded"
+          className="w-full p-2 mb-4 border-[3px] border-dark rounded"
           type="email"
           placeholder="Email"
           value={email}
@@ -125,16 +125,29 @@ const Applicantdashboard = ({ applicant }) => {
           onChange={resumeHandler}
           className="hidden"
         />
-        {resumePreviewUrl && (
-          <div className="border-[3px] border-dark rounded p-2 mt-6">
-            <a
-              href={resumePreviewUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex justify-between"
-            >
+        <div className="text-dark text-lg font-semibold mt-4">
+          <p className="">Uploaded Resume: </p>
+        </div>
+        {applicant.resume_url ? (
+          <div className="border-[3px] border-dark rounded p-2 mt-4">
+            <a href={applicant.resume_url} target="_blank" className="flex justify-between">
               <div>
-                <span>Uploaded Resume: </span>
+                <GrDocumentPdf className="text-xl inline-block mr-1" />
+                {decodeURIComponent(applicant.resume_url.split('/')[9])}
+              </div>
+              <FiDownload className="text-2xl inline-block" />
+            </a>
+          </div>
+        ) : (
+          <div>
+            <p>No resume uploaded</p>
+          </div>
+        )}
+
+        {resumePreviewUrl && (
+          <div className="border-[3px] border-dark rounded p-2 mt-4">
+            <a href={resumePreviewUrl} target="_blank" className="flex justify-between">
+              <div>
                 <GrDocumentPdf className="text-xl inline-block mr-1" />
                 {resumeFile.name}
               </div>

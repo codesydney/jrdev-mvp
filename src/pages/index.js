@@ -37,8 +37,8 @@ export async function getServerSideProps(context) {
   const supabase = createSupabaseClient(session.supabaseAccessToken)
 
   const userId = session.user.id
-  const res = await supabase.from('users').select('role').eq('id', userId)
-  const role = res.data[0]?.role ?? null
+  const res = await supabase.from('users').select('role').limit(1).single().eq('id', userId)
+  const role = res.data.role ?? null
   if (role === null) {
     return {
       redirect: {
