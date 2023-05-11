@@ -55,7 +55,7 @@ export async function getServerSideProps(context) {
     console.log('applicant: ', applicant.data)
     if (!applicant.data) {
       return {
-        props: {}
+        props: { role: users.data.role }
       }
     } else {
       return {

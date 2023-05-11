@@ -1,15 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { GrDocumentUpload, GrDocumentPdf } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const Applicantdashboard = () => {
+const Applicantdashboard = ({ applicant }) => {
+  console.log('applicant: ', applicant)
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [resumeFile, setResumeFile] = useState(null)
   const [resumePreviewUrl, setResumePreviewUrl] = useState('')
+
+  useEffect(() => {
+    if (applicant) {
+      setName(applicant.name || '')
+      setPhone(applicant.phone)
+      setEmail(applicant.email)
+    }
+  }, [applicant])
 
   const { data: session, status } = useSession()
   console.log('session: ', session)
@@ -32,10 +41,6 @@ const Applicantdashboard = () => {
     setResumeFile(file)
     setResumePreviewUrl(URL.createObjectURL(file))
   }
-
-  // const {data: applicant, error: applicantError} = await supabase.from('applicant').select().eq('users_id', session.user.id)
-
-  // const deletePreviousResume = async () => {}
 
   const handleSubmit = async () => {
     if (name && phone && email && resumeFile) {
