@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { GrDocumentUpload, GrDocumentPdf } from 'react-icons/gr'
+import { useState, useEffect } from 'react'
+import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
@@ -10,15 +10,27 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const [email, setEmail] = useState('')
   const [resumeFile, setResumeFile] = useState('')
   const [resumePreviewUrl, setResumePreviewUrl] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
 
   // set applicant data to state
   useEffect(() => {
-    if (applicant) {
+    if (applicant && errorMessage === '') {
       setName(applicant.name)
       setPhone(applicant.phone)
       setEmail(applicant.email)
     }
   }, [applicant])
+
+  useEffect(() => {
+    let timer
+    if (errorMessage) {
+      timer = setTimeout(() => {
+        setErrorMessage('')
+      }, 3000)
+    }
+
+    return () => clearTimeout(timer)
+  }, [errorMessage])
 
   const { data: session, status } = useSession()
 
@@ -81,6 +93,8 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
       setResumePreviewUrl('')
       setResumeFile('')
       onRefresh()
+    } else {
+      setErrorMessage('Please fill in all fields and upload a resume.')
     }
   }
 
@@ -105,7 +119,6 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           updateData.resume_url = resumeUrl
           setResumePreviewUrl('')
           setResumeFile('')
-          console.log('rewrite resume file')
           if (uploadError) {
             console.log('uploadError: ', uploadError)
             throw uploadError
@@ -115,7 +128,6 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           const { data: file, error: uploadError } = await supabase.storage
             .from('resume')
             .upload(resumeBucketPath, resumeFile)
-          console.log('hello')
           updateData.resume_url = resumeUrl
           setResumePreviewUrl('')
           setResumeFile('')
@@ -128,8 +140,6 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           const { data, error: deleteError } = await supabase.storage
             .from('resume')
             .remove([`${session.user.id}/${uploadedResumeName}`])
-          console.log('path3', `${session.user.id}/${uploadedResumeName}`)
-          console.log('removehere4: ', data)
           if (deleteError) {
             console.log('deleteError: ', deleteError)
             throw deleteError
@@ -146,6 +156,8 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         console.error('Error updating applicant:', error)
         throw error
       }
+    } else {
+      setErrorMessage('Please fill in all fields.')
     }
     onRefresh()
   }
@@ -158,46 +170,48 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
       <div className="w-full max-w-md  p-4 sm:p-8 bg-white rounded-lg shadow-md ">
         {/* application form */}
         <h2 className="text-2xl font-semibold mb-6 text-dark">Application Form</h2>
-        <input
-          className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={nameHandler}
-        />
-        <input
-          className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-          type="text"
-          placeholder="Phone"
-          value={phone}
-          onChange={phoneHandler}
-        />
-        <input
-          className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={emailHandler}
-        />
 
-        <label
-          htmlFor="file_input"
-          className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center"
-        >
+        <label>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">Name</span>
+          <input
+            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={nameHandler}
+          />
+        </label>
+        <label>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">Phone</span>
+          <input
+            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            type="text"
+            placeholder="Phone"
+            value={phone}
+            onChange={phoneHandler}
+          />
+        </label>
+
+        <label>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">Email</span>
+          <input
+            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={emailHandler}
+          />
+        </label>
+
+        <label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
           {resumeFile || applicant?.resume_url ? (
-            <span className="text-l">Update Resume</span>
+            <span className="font-semibold">Update Resume</span>
           ) : (
-            <span className="text-l">Upload Resume</span>
+            <span className="font-semibold after:content-['*'] after:ml-0.5">Upload Resume</span>
           )}
           <GrDocumentUpload className="text-5xl mt-2" />
+          <input type="file" accept="application/pdf" onChange={resumeHandler} className="hidden" />
         </label>
-        <input
-          type="file"
-          accept="application/pdf"
-          id="file_input"
-          onChange={resumeHandler}
-          className="hidden"
-        />
 
         {/* Preview resume */}
         {resumePreviewUrl && (
@@ -247,10 +261,17 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           )}
         </div>
 
+        {/* Error message */}
+        {errorMessage && (
+          <div className="text-red-500 text-sm font-semibold mt-4 flex items-center">
+            <GrStatusWarning className="text-lg inline-block mr-2" />
+            {errorMessage}
+          </div>
+        )}
         {/* Submit button */}
         {applicant ? (
           <button
-            className="w-full px-4 py-2 font-semibold text-black bg-primary text-white rounded mt-6"
+            className="w-full px-4 py-2 font-semibold text-black bg-primary text-white rounded mt-2"
             onClick={handleUpdate}
           >
             Update Profile
