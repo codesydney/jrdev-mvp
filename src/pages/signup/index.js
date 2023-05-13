@@ -126,7 +126,7 @@ const Signup = () => {
             Continue with Google
           </button>
           <p className="mt-2 pb-2 font-semibold">
-            Don't have an account?{' '}
+            Do not have an account?{' '}
             <Link href="/signin" className="text-blue-500 hover:text-blue-700">
               Sign Up
             </Link>

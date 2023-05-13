@@ -17,7 +17,7 @@ function Header() {
       {/* Tablet */}
       <div className="hidden sm:flex justify-between px-10 py-3 items-center">
         <Link className="flex gap-3 items-center" href="/">
-          <Image src={Logo} className="h-[70px] w-[70px] " />
+          <Image src={Logo} alt="" className="h-[70px] w-[70px] " />
           <div className="">
             <h3 className=" text-2xl text-dark font-semibold">Jr-dev</h3>
             <p>Code.Sydeny</p>
@@ -70,7 +70,7 @@ function Header() {
       <div className="sm:hidden">
         <div className=" bg-primary w-screen h-[60px] flex items-center justify-between px-5">
           <Link className="flex gap-3 items-center" href="/">
-            <Image src={Logo} className="h-[50px] w-[50px] " />
+            <Image src={Logo} alt="" className="h-[50px] w-[50px] " />
             <div className="">
               <h3 className=" text-2xl text-white font-semibold">Jr-dev</h3>
               <p className="text-white">Code.Sydney</p>

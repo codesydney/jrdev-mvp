@@ -19,6 +19,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
       setPhone(applicant.phone)
       setEmail(applicant.email)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [applicant])
 
   useEffect(() => {
