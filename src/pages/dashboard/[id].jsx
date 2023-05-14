@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
-import DashboardRecruiter from '@/components/dashboard/Recruiterdashboard/Recruiterdashboard'
+import DashboardRecruiter from '@/components/dashboard/Recruiterdashboard'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const Dashboard = ({ role, initialApplicant }) => {
+const Dashboard = ({ role, initialApplicant, initialRecrutier }) => {
   const { data: session, status } = useSession()
   const [applicant, setApplicant] = useState(initialApplicant)
+  const [recruiter, setRecruiter] = useState(initialRecrutier)
 
-  const fetchApplicantData = async () => {
+  const fetchExistingData = async () => {
+    const supabase = createSupabaseClient(session.supabaseAccessToken)
     if (role === 'applicant') {
-      const supabase = createSupabaseClient(session.supabaseAccessToken)
       const userId = session.user.id
       const applicant = await supabase
         .from('applicants')
@@ -21,6 +22,15 @@ const Dashboard = ({ role, initialApplicant }) => {
         .eq('users_id', userId)
 
       setApplicant(applicant.data)
+    } else if (role === 'recruiter') {
+      const userId = session.user.id
+      const recruiter = await supabase
+        .from('recruiters')
+        .select()
+        .limit(1)
+        .single()
+        .eq('users_id', userId)
+      setRecruiter(recruiter.data)
     }
   }
 
@@ -35,9 +45,11 @@ const Dashboard = ({ role, initialApplicant }) => {
   return (
     <>
       {role === 'applicant' && (
-        <Applicantdashboard applicant={applicant} onRefresh={fetchApplicantData} />
+        <Applicantdashboard applicant={applicant} onRefresh={fetchExistingData} />
       )}
-      {role === 'recruiter' && <DashboardRecruiter />}
+      {role === 'recruiter' && (
+        <DashboardRecruiter recruiter={recruiter} onRefresh={fetchExistingData} />
+      )}
     </>
   )
 }
@@ -87,8 +99,15 @@ export async function getServerSideProps(context) {
   }
 
   if (users.data.role === 'recruiter') {
+    const recruiter = await supabase
+      .from('recruiters')
+      .select()
+      .limit(1)
+      .single()
+      .eq('users_id', userId)
+    console.log('recruiter: ', recruiter.data)
     return {
-      props: { role: users.data.role }
+      props: { role: users.data.role, initialRecrutier: recruiter.data }
     }
   }
 

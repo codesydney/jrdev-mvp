@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { GrStatusWarning } from 'react-icons/gr'
+import { GrStatusWarning, GrStatusGood } from 'react-icons/gr'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
@@ -9,6 +9,34 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [phone, setPhone] = useState('')
   const [email, setEmail] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
+
+  // set applicant data to state
+  useEffect(() => {
+    if (recruiter && errorMessage === '') {
+      setCompanyName(recruiter.company)
+      setName(recruiter.name)
+      setPhone(recruiter.phone)
+      setEmail(recruiter.email)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recruiter])
+
+  useEffect(() => {
+    let timer
+    if (errorMessage) {
+      timer = setTimeout(() => {
+        setErrorMessage('')
+      }, 3000)
+    }
+    if (successMessage) {
+      timer = setTimeout(() => {
+        setSuccessMessage('')
+      }, 3000)
+    }
+
+    return () => clearTimeout(timer)
+  }, [errorMessage, successMessage])
 
   const { data: session, status } = useSession()
   const supabase = createSupabaseClient(session.supabaseAccessToken)
@@ -28,6 +56,8 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const emailHandler = (e) => {
     setEmail(e.target.value)
   }
+
+  // create profile
   const handleSubmit = async () => {
     try {
       if (!name || !phone || !email || !companyName) {
@@ -40,14 +70,39 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           company: companyName,
           users_id: session.user.id
         })
+        onRefresh()
+        setSuccessMessage('Profile created successfully')
 
         if (error) {
           setErrorMessage(error.message)
           throw new Error(error.message)
         }
-        if (data) {
-          setErrorMessage('Profile updated successfully')
-          //   onRefresh()
+      }
+    } catch (error) {
+      setErrorMessage(error.message)
+    }
+  }
+
+  // update profile
+  const handleUpdate = async () => {
+    try {
+      if (!name || !phone || !email || !companyName) {
+        setErrorMessage('Please fill all the fields')
+      } else {
+        const { data, error } = await supabase
+          .from('recruiters')
+          .update({
+            name,
+            phone,
+            email,
+            company: companyName
+          })
+          .eq('users_id', session.user.id)
+        onRefresh()
+        setSuccessMessage('Profile updated successfully')
+        if (error) {
+          setErrorMessage(error.message)
+          throw new Error(error.message)
         }
       }
     } catch (error) {
@@ -58,8 +113,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   if (status === 'loading') {
     return <div>Loading...</div>
   }
+
   return (
-    <div className="flex  rounded-3xl items-center justify-center  shadow-lg">
+    <div className="flex rounded-3xl items-center justify-center  shadow-lg">
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg ">
         {/* profile form */}
         <h2 className="text-2xl font-semibold mb-6 text-dark">My Profile</h2>
@@ -114,6 +170,15 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             {errorMessage}
           </div>
         )}
+
+        {/* Success message */}
+        {successMessage && (
+          <div className="text-green-500 text-sm font-semibold mt-4 flex items-center">
+            <GrStatusGood className="text-lg inline-block mr-2" />
+            {successMessage}
+          </div>
+        )}
+
         {/* Submit button */}
         {recruiter ? (
           <button
