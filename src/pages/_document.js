@@ -1,5 +1,5 @@
-import { Html, Head, Main, NextScript } from "next/document";
-import Header from "@/components/header/Header";
+import { Html, Head, Main, NextScript } from 'next/document'
+import Header from '@/components/header/Header'
 export default function Document() {
   return (
     <Html lang="en">
@@ -8,7 +8,7 @@ export default function Document() {
           //fontAwesome icon kit link
           async
           src="https://kit.fontawesome.com/4b926c6456.js"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         ></script>
       </Head>
 
@@ -17,5 +17,5 @@ export default function Document() {
         <NextScript />
       </body>
     </Html>
-  );
+  )
 }
