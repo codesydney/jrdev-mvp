@@ -27,6 +27,9 @@ function Header() {
           <Link className=" text-black  text-lg" href="/">
             Home
           </Link>
+          <Link className=" text-black  text-lg" href={`/dashboard/${session?.user.id}`}>
+            Temporary_Dashboard
+          </Link>
 
           <Link className="hidden text-primary font-semibold text-md" href="/about">
             About Us

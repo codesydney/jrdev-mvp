@@ -8,9 +8,10 @@ import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 import DashboardNavbar from './Recruiterdashboard/DashboardNavbar'
 import RecruiterProfile from './Recruiterdashboard/RecruiterProfile'
+import Link from 'next/link'
 const Recruiterdashboard = ({ recruiter, onRefresh }) => {
   return (
-    <div className="flex w-full border-2 justify-center items-center min-h-screen m-auto">
+    <div className="flex w-full justify-center items-center min-h-screen m-auto">
       <div className="flex justify-center lg:justify-even items-start gap-2 md:gap-20 w-[80%]  m-auto">
         {/* Navbar */}
         <DashboardNavbar />
