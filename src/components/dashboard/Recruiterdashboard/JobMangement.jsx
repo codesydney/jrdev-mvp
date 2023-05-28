@@ -101,23 +101,31 @@ const JobMangement = ({ jobList, onRefresh }) => {
 
   const handleDelete = async (id) => {
     try {
-      const { data, error } = await supabase.from('jobdescription').delete().eq('id', id)
-      if (error) {
-        console.error('Error deleting job description:', error)
-        throw error
+      // get uploaded jd name
+      const { data: uploadJd, error: getError } = await supabase
+        .from('jobdescription')
+        .select('jobdescription_url')
+        .eq('id', id)
+        .single()
+
+      const uploadedResumeName = decodeURIComponent(uploadJd.jobdescription_url.split('/').pop())
+      console.log('1', uploadJd)
+      // delete jobdescription file from storage
+      const { data, error: deleteError } = await supabase.storage
+        .from('jobdescription')
+        .remove([`${session.user.id}/${uploadedResumeName}`])
+
+      console.log('2')
+      if (deleteError) {
+        console.log('deleteError: ', deleteError)
+        throw deleteError
       }
 
-      // delete jobdescription file from storage
-      // const { data, error: deleteError } = await supabase.storage
-      //   .from('jobdescription')
-      //   .remove([`${session.user.id}/${uploadedResumeName}`])
-      // if (deleteError) {
-      //   console.log('deleteError: ', deleteError)
-      //   throw deleteError
-      // }
-      setSuccessMessage('Delete successfully')
+      // delete jobdescription data from Jd table
+      await supabase.from('jobdescription').delete().eq('id', id)
       onRefresh()
     } catch (error) {
+      // *modify later
       setErrorMessage(error.message)
     }
   }

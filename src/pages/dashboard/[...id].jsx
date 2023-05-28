@@ -31,12 +31,14 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList })
         .limit(1)
         .single()
         .eq('users_id', userId)
-      setRecruiter(recruiter.data)
+
       const jobList = await supabase
         .from('jobdescription')
         .select('id, jobdescription_url')
         .eq('users_id', userId)
-      setJobList(jobList.data)
+
+      setRecruiter(recruiter.data)
+      setJobList(jobList?.data)
     }
   }
 
