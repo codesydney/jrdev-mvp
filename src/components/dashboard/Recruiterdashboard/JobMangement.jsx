@@ -99,6 +99,29 @@ const JobMangement = ({ jobList, onRefresh }) => {
     }
   }
 
+  const handleDelete = async (id) => {
+    try {
+      const { data, error } = await supabase.from('jobdescription').delete().eq('id', id)
+      if (error) {
+        console.error('Error deleting job description:', error)
+        throw error
+      }
+
+      // delete jobdescription file from storage
+      // const { data, error: deleteError } = await supabase.storage
+      //   .from('jobdescription')
+      //   .remove([`${session.user.id}/${uploadedResumeName}`])
+      // if (deleteError) {
+      //   console.log('deleteError: ', deleteError)
+      //   throw deleteError
+      // }
+      setSuccessMessage('Delete successfully')
+      onRefresh()
+    } catch (error) {
+      setErrorMessage(error.message)
+    }
+  }
+
   return (
     <div className="flex flex-col gap-4 rounded-3xl items-center justify-center border-2 w-full md:w-[60%]">
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg ">
@@ -185,8 +208,8 @@ const JobMangement = ({ jobList, onRefresh }) => {
                     <FiDownload className="text-2xl" />
                   </a>
                 </div>
-                <div>
-                  <button className="rounded-full p-1 hover:bg-dark ">
+                <div onClick={() => handleDelete(job.id)}>
+                  <button className="rounded-full p-1 hover:bg-dark">
                     <RiDeleteBin6Line className="text-xl" />
                   </button>
                 </div>
