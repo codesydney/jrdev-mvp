@@ -1,14 +1,40 @@
 import { useState } from 'react'
+import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning, GrStatusGood } from 'react-icons/gr'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FiDownload } from 'react-icons/fi'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const JobMangement = ({ jobList }) => {
+const JobMangement = ({ jobList, onRefresh }) => {
   const [jobDescriptionFile, setJobDescriptionFile] = useState('')
   const [jdPreviewUrl, setJdPreviewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+
+  // set applicant data to state
+  // useEffect(() => {
+  //   if (jobList && errorMessage === '') {
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [jobList])
+
+  useEffect(() => {
+    let timer
+    if (errorMessage) {
+      timer = setTimeout(() => {
+        setErrorMessage('')
+      }, 3000)
+    }
+    if (successMessage) {
+      timer = setTimeout(() => {
+        setSuccessMessage('')
+      }, 3000)
+    }
+
+    return () => clearTimeout(timer)
+  }, [errorMessage, successMessage])
+
   console.log('jobList', jobList)
   const { data: session, status } = useSession()
   const supabase = createSupabaseClient(session.supabaseAccessToken)
@@ -66,7 +92,7 @@ const JobMangement = ({ jobList }) => {
         setJdPreviewUrl('')
         setJobDescriptionFile('')
         setSuccessMessage('Upload successfully')
-        // onRefresh()
+        onRefresh()
       }
     } catch (error) {
       setErrorMessage(error.message)
@@ -138,6 +164,39 @@ const JobMangement = ({ jobList }) => {
 
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-dark">Uploaded jobs</h2>
+        {jobList.length > 0 ? (
+          jobList
+            .slice()
+            .reverse()
+            .map((job) => (
+              <div className="flex gap-2 items-center" key={job.id}>
+                <div className="w-full border-b-[3px] border-dark rounded py-2 ">
+                  <a
+                    href={job.jobdescription_url}
+                    target="_blank"
+                    className="flex justify-between items-center hover:underline"
+                  >
+                    <div className="flex justify-center items-center mr-1 overflow-hidden">
+                      <GrDocumentPdf className="text-3xl mr-3 flex-shrink-0" />
+                      <p className="max-w-[350px] overflow-hidden whitespace-nowrap text-ellipsis ">
+                        {decodeURIComponent(job.jobdescription_url.split('/').pop())}
+                      </p>
+                    </div>
+                    <FiDownload className="text-2xl" />
+                  </a>
+                </div>
+                <div>
+                  <button className="rounded-full p-1 hover:bg-dark ">
+                    <RiDeleteBin6Line className="text-xl" />
+                  </button>
+                </div>
+              </div>
+            ))
+        ) : (
+          <div>
+            <p>No job posted.</p>
+          </div>
+        )}
       </div>
     </div>
   )
