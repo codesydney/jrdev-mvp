@@ -5,12 +5,14 @@ import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning, GrStatusGood } from '
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FiDownload } from 'react-icons/fi'
 import { createSupabaseClient } from '@/lib/supabaseClient'
+import Confirmation from '@/components/Confirmation'
 
 const JobMangement = ({ jobList, onRefresh }) => {
   const [jobDescriptionFile, setJobDescriptionFile] = useState('')
   const [jdPreviewUrl, setJdPreviewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
+  const [showConfirmation, setShowConfirmation] = useState(false)
 
   // set applicant data to state
   // useEffect(() => {
@@ -99,6 +101,10 @@ const JobMangement = ({ jobList, onRefresh }) => {
     }
   }
 
+  const HandleshowConfirmation = () => {
+    setShowConfirmation(true)
+  }
+
   const handleDelete = async (id) => {
     try {
       // get uploaded jd name
@@ -123,11 +129,16 @@ const JobMangement = ({ jobList, onRefresh }) => {
 
       // delete jobdescription data from Jd table
       await supabase.from('jobdescription').delete().eq('id', id)
+      setShowConfirmation(false)
       onRefresh()
     } catch (error) {
       // *modify later
       setErrorMessage(error.message)
     }
+  }
+
+  const handleCancelDelete = () => {
+    setShowConfirmation(false)
   }
 
   return (
@@ -216,11 +227,18 @@ const JobMangement = ({ jobList, onRefresh }) => {
                     <FiDownload className="text-2xl" />
                   </a>
                 </div>
-                <div onClick={() => handleDelete(job.id)}>
+                <div onClick={HandleshowConfirmation}>
                   <button className="rounded-full p-1 hover:bg-dark">
                     <RiDeleteBin6Line className="text-xl" />
                   </button>
                 </div>
+                <Confirmation
+                  isOpen={showConfirmation}
+                  title="Confirm Delete"
+                  message="Are you sure you want to delete this job?"
+                  onConfirm={() => handleDelete(job.id)}
+                  onCancel={handleCancelDelete}
+                />
               </div>
             ))
         ) : (
