@@ -168,7 +168,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   }
   return (
     <div className="flex items-center justify-center min-h-screen ">
-      <div className="w-full max-w-md  p-4 sm:p-8 bg-white rounded-lg shadow-md ">
+      <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-md ">
         {/* application form */}
         <h2 className="text-2xl font-semibold mb-6 text-dark">Application Form</h2>
 

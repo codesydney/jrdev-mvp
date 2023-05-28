@@ -8,15 +8,25 @@ import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 import DashboardNavbar from './Recruiterdashboard/DashboardNavbar'
 import RecruiterProfile from './Recruiterdashboard/RecruiterProfile'
+import JobMangement from './Recruiterdashboard/JobMangement'
+import { useRouter } from 'next/router'
+
 import Link from 'next/link'
-const Recruiterdashboard = ({ recruiter, onRefresh }) => {
+const Recruiterdashboard = ({ recruiter, jobList, onRefresh }) => {
+  const router = useRouter()
+  console.log('router', router)
   return (
     <div className="flex w-full justify-center items-center min-h-screen m-auto">
-      <div className="flex justify-center lg:justify-even items-start gap-2 md:gap-20 w-[80%]  m-auto">
+      <div className="flex w-full justify-center lg:justify-even items-start gap-2 md:gap-20 md:w-[80%] m-auto">
         {/* Navbar */}
         <DashboardNavbar />
         {/* main */}
-        <RecruiterProfile recruiter={recruiter} onRefresh={onRefresh} />
+        {router.query.id[0] === 'profile' && (
+          <RecruiterProfile recruiter={recruiter} onRefresh={onRefresh} />
+        )}
+        {router.query.id[0] === 'jobmanagement' && (
+          <JobMangement jobList={jobList} onRefresh={onRefresh} />
+        )}
       </div>
     </div>
   )

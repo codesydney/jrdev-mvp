@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { getSession } from 'next-auth/react'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
-import DashboardRecruiter from '@/components/dashboard/Recruiterdashboard'
+import Recruiterdashboard from '@/components/dashboard/Recruiterdashboard'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
-const Dashboard = ({ role, initialApplicant, initialRecrutier }) => {
+const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList }) => {
   const { data: session, status } = useSession()
   const [applicant, setApplicant] = useState(initialApplicant)
   const [recruiter, setRecruiter] = useState(initialRecrutier)
+  const [jobList, setJobList] = useState(initialJobList)
 
   const fetchExistingData = async () => {
     const supabase = createSupabaseClient(session.supabaseAccessToken)
@@ -48,7 +49,7 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier }) => {
         <Applicantdashboard applicant={applicant} onRefresh={fetchExistingData} />
       )}
       {role === 'recruiter' && (
-        <DashboardRecruiter recruiter={recruiter} onRefresh={fetchExistingData} />
+        <Recruiterdashboard recruiter={recruiter} jobList={jobList} onRefresh={fetchExistingData} />
       )}
     </>
   )
@@ -105,9 +106,18 @@ export async function getServerSideProps(context) {
       .limit(1)
       .single()
       .eq('users_id', userId)
+
     console.log('recruiter: ', recruiter.data)
+    const jobdescription = await supabase
+      .from('jobdescription')
+      .select('jobdescription_url')
+      .eq('users_id', userId)
     return {
-      props: { role: users.data.role, initialRecrutier: recruiter.data }
+      props: {
+        role: users.data.role,
+        initialRecrutier: recruiter.data,
+        initialJobList: jobdescription.data
+      }
     }
   }
 

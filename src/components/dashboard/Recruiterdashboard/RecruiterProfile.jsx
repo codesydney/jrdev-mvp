@@ -115,8 +115,8 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   }
 
   return (
-    <div className="flex rounded-3xl items-center justify-center  shadow-lg">
-      <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg ">
+    <div className="flex rounded-3xl items-center justify-center md:w-[60%]">
+      <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg">
         {/* profile form */}
         <h2 className="text-2xl font-semibold mb-6 text-dark">My Profile</h2>
 
