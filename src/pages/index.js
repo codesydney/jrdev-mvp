@@ -5,7 +5,7 @@ import { createSupabaseClient } from '@/lib/supabaseClient'
 
 export default function Home() {
   return (
-    <Layout style="flex flex-col items-center">
+    <div className="flex flex-col items-center">
       <article className="prose flex flex-col items-center">
         <div className="text-center ">
           <h1 className="m-0 text-black">Jr-dev</h1>
@@ -23,7 +23,7 @@ export default function Home() {
           />
         </div>
       </article>
-    </Layout>
+    </div>
   )
 }
 

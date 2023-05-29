@@ -158,7 +158,7 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
             <span className="font-semibold">Update Job Description</span>
           ) : (
             <span className="font-semibold after:content-['*'] after:ml-0.5">
-              Upload A Job Description in PDF
+              Upload A Job Description In PDF
             </span>
           )}
           <GrDocumentUpload className="text-5xl mt-2" />

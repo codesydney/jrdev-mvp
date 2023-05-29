@@ -15,8 +15,8 @@ import Link from 'next/link'
 const Recruiterdashboard = ({ recruiter, jobList, onRefresh }) => {
   const router = useRouter()
   return (
-    <div className="flex w-full justify-center items-center min-h-screen m-auto bg-gray-100">
-      <div className="flex w-full justify-center lg:justify-even items-start gap-2 md:gap-20 md:w-[80%] m-auto">
+    <div className="bg-gray-100">
+      <div className="flex flex-col md:flex-row min-h-screen w-full justify-center items-center pt-20 lg:justify-even md:items-start gap-2 md:gap-20 md:w-[80%] m-auto bg-gray-100">
         {/* Navbar */}
         <DashboardNavbar />
         {/* main */}
