@@ -1,12 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CgProfile } from 'react-icons/cg'
 import { useSession } from 'next-auth/react'
 import { MdDashboard, MdOutlinePostAdd } from 'react-icons/md'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const DashboardNavbar = () => {
-  const { data: seesion } = useSession()
+  const { data: session } = useSession()
   const [activeLink, setActiveLink] = useState('Profile')
+  const router = useRouter()
+
+  useEffect(() => {
+    if (router.query.id[0] === 'profile') {
+      setActiveLink('Profile')
+    }
+    if (router.query.id[0] === 'jobmanagement') {
+      setActiveLink('Job management')
+    }
+  }, [router.query.id])
 
   const handleLinkClick = (link) => {
     setActiveLink(link)
@@ -21,7 +32,7 @@ const DashboardNavbar = () => {
         </li>
         <li className="w-full">
           <Link
-            href={`/dashboard/profile/${seesion.user.id}}`}
+            href={`/dashboard/profile/${session.user.id}}`}
             className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
             ${activeLink === 'Profile' ? 'text-primary' : ''}`}
             onClick={() => handleLinkClick('Profile')}
@@ -32,7 +43,7 @@ const DashboardNavbar = () => {
         </li>
         <li className="w-full">
           <Link
-            href={`/dashboard/jobmanagement/${seesion.user.id}`}
+            href={`/dashboard/jobmanagement/${session.user.id}`}
             className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
             ${activeLink === 'Job management' ? 'text-primary' : ''}`}
             onClick={() => handleLinkClick('Job management')}

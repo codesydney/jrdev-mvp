@@ -10,8 +10,8 @@ import DashboardNavbar from './Recruiterdashboard/DashboardNavbar'
 import RecruiterProfile from './Recruiterdashboard/RecruiterProfile'
 import JobMangement from './Recruiterdashboard/JobMangement'
 import { useRouter } from 'next/router'
-
 import Link from 'next/link'
+
 const Recruiterdashboard = ({ recruiter, jobList, onRefresh }) => {
   const router = useRouter()
   console.log('router', router)

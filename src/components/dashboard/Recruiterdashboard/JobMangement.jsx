@@ -7,6 +7,7 @@ import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FiDownload } from 'react-icons/fi'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 import Confirmation from '@/components/Confirmation'
+import Link from 'next/link'
 
 const JobMangement = ({ recruiter, jobList, onRefresh }) => {
   const [jobDescriptionFile, setJobDescriptionFile] = useState('')
@@ -129,6 +130,23 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
 
   const handleCancelDelete = () => {
     setShowConfirmation(false)
+  }
+
+  console.log('recuritor', recruiter)
+
+  if (recruiter === null) {
+    return (
+      <div className="flex flex-col gap-4 rounded-3xl items-center justify-center w-full md:w-[60%]">
+        <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg ">
+          <h2 className="text-2xl font-semibold mb-6 text-dark">
+            Before you can post a job, we kindly ask you to complete your profile.
+          </h2>
+          <button className="bg-dark text-white rounded-lg px-4 py-2" onClick={onRefresh}>
+            <Link href={`/dashboard/profile/${session.user.id}}`}>Go Back </Link>
+          </button>
+        </div>
+      </div>
+    )
   }
 
   return (

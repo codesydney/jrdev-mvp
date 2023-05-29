@@ -32,10 +32,13 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList })
         .single()
         .eq('users_id', userId)
 
-      const jobList = await supabase
-        .from('jobdescription')
-        .select('id, jobdescription_url')
-        .eq('recruiters_id', recruiter.data.id)
+      let jobList = []
+      if (recruiter?.data) {
+        const jobList = await supabase
+          .from('jobdescription')
+          .select('id, jobdescription_url')
+          .eq('recruiters_id', recruiter.data.id)
+      }
 
       setRecruiter(recruiter.data)
       setJobList(jobList?.data)
@@ -115,16 +118,20 @@ export async function getServerSideProps(context) {
       .eq('users_id', userId)
 
     console.log('recruiter: ', recruiter.data)
-    const jobdescription = await supabase
-      .from('jobdescription')
-      .select('id,jobdescription_url')
-      .eq('recruiters_id', recruiter.data.id)
-    console.log('jobdescription: ', jobdescription.data)
+    let jobdescription = null
+    if (recruiter?.data) {
+      const jobdescription = await supabase
+        .from('jobdescription')
+        .select('id,jobdescription_url')
+        .eq('recruiters_id', recruiter.data.id)
+      console.log('jobdescription: ', jobdescription.data)
+    }
+
     return {
       props: {
         role: users.data.role,
         initialRecrutier: recruiter.data,
-        initialJobList: jobdescription.data
+        initialJobList: jobdescription?.data || []
       }
     }
   }
