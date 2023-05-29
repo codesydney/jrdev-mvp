@@ -2,24 +2,18 @@ import { useState } from 'react'
 import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning, GrStatusGood } from 'react-icons/gr'
+import { BiArrowFromLeft } from 'react-icons/bi'
 import { RiDeleteBin6Line } from 'react-icons/ri'
 import { FiDownload } from 'react-icons/fi'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 import Confirmation from '@/components/Confirmation'
 
-const JobMangement = ({ jobList, onRefresh }) => {
+const JobMangement = ({ recruiter, jobList, onRefresh }) => {
   const [jobDescriptionFile, setJobDescriptionFile] = useState('')
   const [jdPreviewUrl, setJdPreviewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [showConfirmation, setShowConfirmation] = useState(false)
-
-  // set applicant data to state
-  // useEffect(() => {
-  //   if (jobList && errorMessage === '') {
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [jobList])
 
   useEffect(() => {
     let timer
@@ -47,6 +41,8 @@ const JobMangement = ({ jobList, onRefresh }) => {
     setJobDescriptionFile(file)
     if (file) {
       setJdPreviewUrl(URL.createObjectURL(file))
+    } else {
+      setJdPreviewUrl('')
     }
   }
 
@@ -73,17 +69,11 @@ const JobMangement = ({ jobList, onRefresh }) => {
         console.log('handleSubmit3')
 
         // get recruiters id
-        const { data: recruiter, error: recruiterError } = await supabase
-          .from('recruiters')
-          .select('id')
-          .eq('users_id', session.user.id)
-          .single()
         const recruiterId = recruiter.id
 
         // insert applicant data to db
         const { data, error } = await supabase.from('jobdescription').insert({
           jobdescription_url: jdUrl,
-          users_id: session.user.id,
           recruiters_id: recruiterId
         })
 
@@ -142,15 +132,15 @@ const JobMangement = ({ jobList, onRefresh }) => {
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-3xl items-center justify-center border-2 w-full md:w-[60%]">
+    <div className="flex flex-col gap-4 rounded-3xl items-center justify-center w-full md:w-[60%]">
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg ">
         <h2 className="text-2xl font-semibold mb-6 text-dark">Post a job</h2>
         <label className="h-[100px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center p-1 justify-center">
           {jobDescriptionFile ? (
-            <span className="font-semibold">Update a Job Description</span>
+            <span className="font-semibold">Update Job Description</span>
           ) : (
             <span className="font-semibold after:content-['*'] after:ml-0.5">
-              Upload a Job Description
+              Upload A Job Description in PDF
             </span>
           )}
           <GrDocumentUpload className="text-5xl mt-2" />
@@ -166,14 +156,18 @@ const JobMangement = ({ jobList, onRefresh }) => {
           <div className="text-lg font-semibold mt-4">
             <p className=" text-primary mb-2">Preview Job Description: </p>
             <div className=" border-b-[3px] border-dark rounded py-2">
-              <a href={jdPreviewUrl} target="_blank" className="flex justify-between items-center">
+              <a
+                href={jdPreviewUrl}
+                target="_blank"
+                className="flex justify-between items-center hover:underline"
+              >
                 <div className="flex justify-center items-center mr-1 overflow-hidden">
                   <GrDocumentPdf className="text-3xl mr-3 flex-shrink-0" />
                   <p className="max-w-[350px] overflow-hidden whitespace-nowrap text-ellipsis">
                     {jobDescriptionFile?.name}
                   </p>
                 </div>
-                <FiDownload className="text-2xl flex-shrink-0" />
+                <BiArrowFromLeft className="text-2xl flex-shrink-0" />
               </a>
             </div>
           </div>
@@ -200,12 +194,12 @@ const JobMangement = ({ jobList, onRefresh }) => {
           className="w-full bg-primary text-white rounded-lg py-2 mt-4"
           onClick={handleSubmit}
         >
-          Post a Job
+          Post a job
         </button>
       </div>
 
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg">
-        <h2 className="text-2xl font-semibold mb-6 text-dark">Uploaded jobs</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-dark">Job listings</h2>
         {jobList.length > 0 ? (
           jobList
             .slice()
@@ -235,7 +229,7 @@ const JobMangement = ({ jobList, onRefresh }) => {
                 <Confirmation
                   isOpen={showConfirmation}
                   title="Confirm Delete"
-                  message="Are you sure you want to delete this job?"
+                  message="Are you sure you want to delete this job Description?"
                   onConfirm={() => handleDelete(job.id)}
                   onCancel={handleCancelDelete}
                 />
@@ -243,7 +237,7 @@ const JobMangement = ({ jobList, onRefresh }) => {
             ))
         ) : (
           <div>
-            <p>No job posted.</p>
+            <p>No job posted. Please post a new job first.</p>
           </div>
         )}
       </div>

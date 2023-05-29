@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning } from 'react-icons/gr'
 import { FiDownload } from 'react-icons/fi'
+import { BiArrowFromLeft } from 'react-icons/bi'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 
@@ -222,7 +223,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
               <a
                 href={resumePreviewUrl}
                 target="_blank"
-                className="flex justify-between items-center"
+                className="flex justify-between items-center hover:underline"
               >
                 <div className="flex justify-center items-center mr-1 overflow-hidden">
                   <GrDocumentPdf className="text-3xl mr-3 flex-shrink-0" />
@@ -230,7 +231,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
                     {resumeFile?.name}
                   </p>
                 </div>
-                <FiDownload className="text-2xl flex-shrink-0" />
+                <BiArrowFromLeft className="text-2xl flex-shrink-0" />
               </a>
             </div>
           </div>
@@ -272,14 +273,14 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         {/* Submit button */}
         {applicant ? (
           <button
-            className="w-full px-4 py-2 font-semibold text-black bg-primary text-white rounded mt-2"
+            className="w-full px-4 py-2 font-semibold text-black bg-primary rounded mt-2"
             onClick={handleUpdate}
           >
             Update Profile
           </button>
         ) : (
           <button
-            className="w-full px-4 py-2 font-semibold text-black bg-primary text-white rounded mt-6"
+            className="w-full px-4 py-2 font-semibold text-black bg-primary rounded mt-6"
             onClick={handleSubmit}
           >
             Create Profile

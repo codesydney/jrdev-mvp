@@ -35,7 +35,7 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList })
       const jobList = await supabase
         .from('jobdescription')
         .select('id, jobdescription_url')
-        .eq('users_id', userId)
+        .eq('recruiters_id', recruiter.data.id)
 
       setRecruiter(recruiter.data)
       setJobList(jobList?.data)
@@ -118,7 +118,8 @@ export async function getServerSideProps(context) {
     const jobdescription = await supabase
       .from('jobdescription')
       .select('id,jobdescription_url')
-      .eq('users_id', userId)
+      .eq('recruiters_id', recruiter.data.id)
+    console.log('jobdescription: ', jobdescription.data)
     return {
       props: {
         role: users.data.role,

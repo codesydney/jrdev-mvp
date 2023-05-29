@@ -13,7 +13,7 @@ const DashboardNavbar = () => {
   }
 
   return (
-    <div className="w-72 shadow-lg rounded-3xl px-4 py-6 hidden md:block">
+    <div className="w-72 shadow-lg rounded-3xl px-4 py-6 hidden md:block bg-white">
       <ul className="flex  flex-col  gap-4 items-start justify-center ">
         <li className="flex w-full items-center flex-1 border-b-4 border-primary pb-2">
           <MdDashboard className="text-2xl inline-block mr-3 text-primary" />

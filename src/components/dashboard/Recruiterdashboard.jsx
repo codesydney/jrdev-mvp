@@ -16,7 +16,7 @@ const Recruiterdashboard = ({ recruiter, jobList, onRefresh }) => {
   const router = useRouter()
   console.log('router', router)
   return (
-    <div className="flex w-full justify-center items-center min-h-screen m-auto">
+    <div className="flex w-full justify-center items-center min-h-screen m-auto bg-gray-100">
       <div className="flex w-full justify-center lg:justify-even items-start gap-2 md:gap-20 md:w-[80%] m-auto">
         {/* Navbar */}
         <DashboardNavbar />
@@ -25,7 +25,7 @@ const Recruiterdashboard = ({ recruiter, jobList, onRefresh }) => {
           <RecruiterProfile recruiter={recruiter} onRefresh={onRefresh} />
         )}
         {router.query.id[0] === 'jobmanagement' && (
-          <JobMangement jobList={jobList} onRefresh={onRefresh} />
+          <JobMangement jobList={jobList} recruiter={recruiter} onRefresh={onRefresh} />
         )}
       </div>
     </div>
