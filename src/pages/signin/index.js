@@ -35,7 +35,8 @@ const Signup = () => {
       <div className="w-[80%] min-h-screen flex flex-col sm:flex-row justify-center items-center mx-auto bg-gradient-to-tr from-white to-bg-200">
         {/* SignUp form */}
         <div className="w-full h-screen flex items-center justify-center flex-col md:w-1/2 xl:w-1/3 p-6 sm:p-12 md:border-double md:border-r-4 md:rounded-tr-[15%]">
-          <h1 className="text-2xl font-bold text-center mb-5">Please Sign Up</h1>
+          <h1 className="text-2xl font-bold text-center mb-5">Please Sign In/Up</h1>
+
           <form className="flex flex-col items-center justify-center" onSubmit={handleSubmit}>
             <label className="block">Email</label>
             <input
@@ -99,6 +100,7 @@ const Signup = () => {
               )}
             </button>
           </form>
+
           <hr className="mt-6 border-gray-300 w-full " />
           <button
             onClick={signin}

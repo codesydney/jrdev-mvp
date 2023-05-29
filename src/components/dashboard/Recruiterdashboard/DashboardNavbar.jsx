@@ -19,10 +19,6 @@ const DashboardNavbar = () => {
     }
   }, [router.query.id])
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link)
-  }
-
   return (
     <div className="w-72 shadow-lg rounded-3xl px-4 py-6 hidden md:block bg-white">
       <ul className="flex  flex-col  gap-4 items-start justify-center ">
@@ -35,7 +31,6 @@ const DashboardNavbar = () => {
             href={`/dashboard/profile/${session.user.id}}`}
             className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
             ${activeLink === 'Profile' ? 'text-primary' : ''}`}
-            onClick={() => handleLinkClick('Profile')}
           >
             <CgProfile className="text-2xl inline-block mr-3" />
             <span className="font-semibold">Profile</span>
@@ -46,7 +41,6 @@ const DashboardNavbar = () => {
             href={`/dashboard/jobmanagement/${session.user.id}`}
             className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
             ${activeLink === 'Job management' ? 'text-primary' : ''}`}
-            onClick={() => handleLinkClick('Job management')}
           >
             <MdOutlinePostAdd className="text-2xl inline-block mr-3" />
             <span className="font-semibold">Job management</span>

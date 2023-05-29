@@ -32,7 +32,7 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
     return () => clearTimeout(timer)
   }, [errorMessage, successMessage])
 
-  console.log('jobList', jobList)
+  console.log('jobList-jbmg', jobList)
   const { data: session, status } = useSession()
   const supabase = createSupabaseClient(session.supabaseAccessToken)
 
@@ -141,7 +141,7 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
           <h2 className="text-2xl font-semibold mb-6 text-dark">
             Before you can post a job, we kindly ask you to complete your profile.
           </h2>
-          <button className="bg-dark text-white rounded-lg px-4 py-2" onClick={onRefresh}>
+          <button className="bg-primary text-white rounded-lg px-4 py-2" onClick={onRefresh}>
             <Link href={`/dashboard/profile/${session.user.id}}`}>Go Back </Link>
           </button>
         </div>
@@ -218,7 +218,7 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
 
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-dark">Job listings</h2>
-        {jobList.length > 0 ? (
+        {jobList?.length > 0 ? (
           jobList
             .slice()
             .reverse()

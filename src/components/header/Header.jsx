@@ -27,7 +27,7 @@ function Header() {
           <Link className=" text-black  text-lg" href="/">
             Home
           </Link>
-          <Link className=" text-black  text-lg" href={`/dashboard/${session?.user.id}`}>
+          <Link className=" text-black  text-lg" href={`/dashboard/profile/${session?.user.id}`}>
             Temporary_Dashboard
           </Link>
 
@@ -43,7 +43,7 @@ function Header() {
             </Link>
             <Link
               className="border-[2px] m-auto rounded-full bg-primary text-white border-primary px-3 text-lg"
-              href="/signup"
+              href="/signin"
             >
               Sign Up
             </Link>
@@ -102,7 +102,7 @@ function Header() {
             </Link>
             <Link
               className="border-[2px] shadow-lg my-auto rounded-full bg-primary text-white border-primary px-3 text-lg"
-              href="/signup"
+              href="/signin"
             >
               Sign Up
             </Link>

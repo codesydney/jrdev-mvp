@@ -280,7 +280,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           </button>
         ) : (
           <button
-            className="w-full px-4 py-2 font-semibold text-black bg-primary rounded mt-6"
+            className="w-full px-4 py-2 font-semibold text-white bg-primary rounded mt-6"
             onClick={handleSubmit}
           >
             Create Profile

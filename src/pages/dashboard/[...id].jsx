@@ -32,16 +32,17 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList })
         .single()
         .eq('users_id', userId)
 
-      let jobList = []
+      let jobList = null
       if (recruiter?.data) {
-        const jobList = await supabase
+        const jobListRes = await supabase
           .from('jobdescription')
           .select('id, jobdescription_url')
           .eq('recruiters_id', recruiter.data.id)
+        jobList = jobListRes.data
       }
 
       setRecruiter(recruiter.data)
-      setJobList(jobList?.data)
+      setJobList(jobList)
     }
   }
 
@@ -70,7 +71,7 @@ export async function getServerSideProps(context) {
   if (!session?.user?.id) {
     return {
       redirect: {
-        destination: '/signup',
+        destination: '/signin',
         permanent: false
       }
     }
@@ -84,7 +85,7 @@ export async function getServerSideProps(context) {
   if (!users.data) {
     return {
       redirect: {
-        destination: '/signup',
+        destination: '/signin',
         permanent: false
       }
     }
@@ -120,18 +121,18 @@ export async function getServerSideProps(context) {
     console.log('recruiter: ', recruiter.data)
     let jobdescription = null
     if (recruiter?.data) {
-      const jobdescription = await supabase
+      const jobdescriptionRes = await supabase
         .from('jobdescription')
         .select('id,jobdescription_url')
         .eq('recruiters_id', recruiter.data.id)
-      console.log('jobdescription: ', jobdescription.data)
+      jobdescription = jobdescriptionRes.data
     }
 
     return {
       props: {
         role: users.data.role,
         initialRecrutier: recruiter.data,
-        initialJobList: jobdescription?.data || []
+        initialJobList: jobdescription
       }
     }
   }
