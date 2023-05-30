@@ -4,6 +4,7 @@ import { getSession } from 'next-auth/react'
 import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
 import Recruiterdashboard from '@/components/dashboard/Recruiterdashboard'
 import { createSupabaseClient } from '@/lib/supabaseClient'
+import Loading from '@/components/Loading'
 
 const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList }) => {
   const { data: session, status } = useSession()
@@ -51,7 +52,7 @@ const Dashboard = ({ role, initialApplicant, initialRecrutier, initialJobList })
   }
 
   if (status === 'loading') {
-    return <div>Loading page...</div>
+    return <Loading />
   }
 
   return (

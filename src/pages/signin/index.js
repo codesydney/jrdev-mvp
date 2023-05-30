@@ -6,6 +6,7 @@ import Link from 'next/link'
 import signUp from '../../../public/assets/signUp.png'
 import Image from 'next/image'
 import { signIn } from 'next-auth/react'
+import Loading from '@/components/Loading'
 
 const Signup = () => {
   const [spinner, setSpinner] = useState(false)
@@ -27,7 +28,7 @@ const Signup = () => {
   }
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

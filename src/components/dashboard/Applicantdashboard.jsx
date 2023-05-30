@@ -4,6 +4,7 @@ import { FiDownload } from 'react-icons/fi'
 import { BiArrowFromLeft } from 'react-icons/bi'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
+import Loading from '../Loading'
 
 const Applicantdashboard = ({ applicant, onRefresh }) => {
   const [name, setName] = useState('')
@@ -165,7 +166,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   }
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <Loading />
   }
   return (
     <div className="flex items-center justify-center min-h-screen ">

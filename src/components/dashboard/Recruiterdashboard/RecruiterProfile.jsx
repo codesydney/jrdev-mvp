@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { GrStatusWarning, GrStatusGood } from 'react-icons/gr'
 import { useSession } from 'next-auth/react'
 import { createSupabaseClient } from '@/lib/supabaseClient'
+import Loading from '@/components/Loading'
 
 const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [companyName, setCompanyName] = useState('')
@@ -111,7 +112,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   }
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   return (

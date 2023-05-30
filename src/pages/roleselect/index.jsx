@@ -3,6 +3,7 @@ import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import { createSupabaseClient } from '@/lib/supabaseClient'
 import Confirmation from '@/components/Confirmation'
+import Loading from '@/components/Loading'
 
 const Roleselect = () => {
   const [role, setRole] = useState('')
@@ -12,7 +13,7 @@ const Roleselect = () => {
   const [errorMessage, setErrorMessage] = useState('')
 
   if (status === 'loading') {
-    return <div>Loading...</div>
+    return <Loading />
   }
 
   if (session) {
