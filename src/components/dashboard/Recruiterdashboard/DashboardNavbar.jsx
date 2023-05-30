@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react'
-import { CgProfile } from 'react-icons/cg'
-import { useSession } from 'next-auth/react'
-import { MdDashboard, MdOutlinePostAdd } from 'react-icons/md'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
+import React, { useEffect, useState } from "react";
+import { CgProfile } from "react-icons/cg";
+import { useSession } from "next-auth/react";
+import { MdDashboard, MdOutlinePostAdd } from "react-icons/md";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 const DashboardNavbar = () => {
-  const { data: session } = useSession()
-  const [activeLink, setActiveLink] = useState('Profile')
-  const router = useRouter()
+  const { data: session } = useSession();
+  const [activeLink, setActiveLink] = useState("Profile");
+  const router = useRouter();
 
   useEffect(() => {
-    if (router.query.id[0] === 'profile') {
-      setActiveLink('Profile')
+    if (router.query.id[0] === "profile") {
+      setActiveLink("Profile");
     }
-    if (router.query.id[0] === 'jobmanagement') {
-      setActiveLink('Job management')
+    if (router.query.id[0] === "jobmanagement") {
+      setActiveLink("Job management");
     }
-  }, [router.query.id])
+  }, [router.query.id]);
 
   return (
     <>
@@ -31,7 +31,7 @@ const DashboardNavbar = () => {
             <Link
               href={`/dashboard/profile/${session.user.id}}`}
               className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
-            ${activeLink === 'Profile' ? 'text-primary' : ''}`}
+            ${activeLink === "Profile" ? "text-primary" : ""}`}
             >
               <CgProfile className="text-2xl inline-block mr-3" />
               <span className="font-semibold">Profile</span>
@@ -41,7 +41,7 @@ const DashboardNavbar = () => {
             <Link
               href={`/dashboard/jobmanagement/${session.user.id}`}
               className={`flex items-center flex-1 hover:text-primary focus:text-primary active:text-primary border-b pb-2 
-            ${activeLink === 'Job management' ? 'text-primary' : ''}`}
+            ${activeLink === "Job management" ? "text-primary" : ""}`}
             >
               <MdOutlinePostAdd className="text-2xl inline-block mr-3" />
               <span className="font-semibold">Job management</span>
@@ -60,7 +60,7 @@ const DashboardNavbar = () => {
             <Link
               href={`/dashboard/profile/${session.user.id}`}
               className={`flex flex-col items-center hover:text-primary focus:text-primary active:text-primary border-b pb-2 
-        ${activeLink === 'Profile' ? 'text-primary' : ''}`}
+        ${activeLink === "Profile" ? "text-primary" : ""}`}
             >
               <CgProfile className="text-2xl inline-block mr-3" />
               <span className="font-semibold">Profile</span>
@@ -70,7 +70,7 @@ const DashboardNavbar = () => {
             <Link
               href={`/dashboard/jobmanagement/${session.user.id}`}
               className={`flex flex-col items-center justify-center  hover:text-primary focus:text-primary active:text-primary border-b pb-2 
-        ${activeLink === 'Job management' ? 'text-primary' : ''}`}
+        ${activeLink === "Job management" ? "text-primary" : ""}`}
             >
               <MdOutlinePostAdd className="text-2xl inline-block mr-3" />
               <span className="font-semibold">Job management</span>
@@ -79,7 +79,7 @@ const DashboardNavbar = () => {
         </ul>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default DashboardNavbar
+export default DashboardNavbar;

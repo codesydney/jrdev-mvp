@@ -1,152 +1,167 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { GrDocumentUpload, GrDocumentPdf, GrStatusWarning, GrStatusGood } from 'react-icons/gr'
-import { BiArrowFromLeft } from 'react-icons/bi'
-import { RiDeleteBin6Line } from 'react-icons/ri'
-import { FiDownload } from 'react-icons/fi'
-import { createSupabaseClient } from '@/lib/supabaseClient'
-import Confirmation from '@/components/Confirmation'
-import Link from 'next/link'
+import { useState } from "react";
+import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import {
+  GrDocumentUpload,
+  GrDocumentPdf,
+  GrStatusWarning,
+  GrStatusGood,
+} from "react-icons/gr";
+import { BiArrowFromLeft } from "react-icons/bi";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { FiDownload } from "react-icons/fi";
+import { createSupabaseClient } from "@/lib/supabaseClient";
+import Confirmation from "@/components/Confirmation";
+import Link from "next/link";
 
 const JobMangement = ({ recruiter, jobList, onRefresh }) => {
-  const [jobDescriptionFile, setJobDescriptionFile] = useState('')
-  const [jdPreviewUrl, setJdPreviewUrl] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [jobDescriptionFile, setJobDescriptionFile] = useState("");
+  const [jdPreviewUrl, setJdPreviewUrl] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
-    let timer
+    let timer;
     if (errorMessage) {
       timer = setTimeout(() => {
-        setErrorMessage('')
-      }, 3000)
+        setErrorMessage("");
+      }, 3000);
     }
     if (successMessage) {
       timer = setTimeout(() => {
-        setSuccessMessage('')
-      }, 3000)
+        setSuccessMessage("");
+      }, 3000);
     }
 
-    return () => clearTimeout(timer)
-  }, [errorMessage, successMessage])
+    return () => clearTimeout(timer);
+  }, [errorMessage, successMessage]);
 
-  console.log('jobList-jbmg', jobList)
-  const { data: session, status } = useSession()
-  const supabase = createSupabaseClient(session.supabaseAccessToken)
+  console.log("jobList-jbmg", jobList);
+  const { data: session, status } = useSession();
+  const supabase = createSupabaseClient(session.supabaseAccessToken);
 
   const jobdescriptionHandler = (e) => {
-    e.preventDefault()
-    const file = e.target.files[0]
-    setJobDescriptionFile(file)
+    e.preventDefault();
+    const file = e.target.files[0];
+    setJobDescriptionFile(file);
     if (file) {
-      setJdPreviewUrl(URL.createObjectURL(file))
+      setJdPreviewUrl(URL.createObjectURL(file));
     } else {
-      setJdPreviewUrl('')
+      setJdPreviewUrl("");
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     try {
       if (!jobDescriptionFile) {
-        setErrorMessage('Please upload a job description.')
+        setErrorMessage("Please upload a job description.");
       } else {
         // upload resume to storage
-        const jdBucketPath = `${session.user.id}/${jobDescriptionFile.name}`
-        console.log('handleSubmit1')
+        const jdBucketPath = `${session.user.id}/${jobDescriptionFile.name}`;
+        console.log("handleSubmit1");
         const { data: file, error: uploadError } = supabase.storage
-          .from('jobdescription')
-          .upload(jdBucketPath, jobDescriptionFile)
+          .from("jobdescription")
+          .upload(jdBucketPath, jobDescriptionFile);
         if (uploadError) {
-          console.log('uploadError: ', uploadError)
-          throw uploadError
+          console.log("uploadError: ", uploadError);
+          throw uploadError;
         }
-        console.log('handleSubmit2')
+        console.log("handleSubmit2");
 
         //get job description url from storage
-        const resp = await supabase.storage.from('jobdescription').getPublicUrl(jdBucketPath)
-        const jdUrl = resp.data.publicUrl
-        console.log('handleSubmit3')
+        const resp = await supabase.storage
+          .from("jobdescription")
+          .getPublicUrl(jdBucketPath);
+        const jdUrl = resp.data.publicUrl;
+        console.log("handleSubmit3");
 
         // get recruiters id
-        const recruiterId = recruiter.id
+        const recruiterId = recruiter.id;
 
         // insert applicant data to db
-        const { data, error } = await supabase.from('jobdescription').insert({
+        const { data, error } = await supabase.from("jobdescription").insert({
           jobdescription_url: jdUrl,
-          recruiters_id: recruiterId
-        })
+          recruiters_id: recruiterId,
+        });
 
         if (error) {
-          console.error('Error submitting form:', error)
-          throw error
+          console.error("Error submitting form:", error);
+          throw error;
         }
-        setJdPreviewUrl('')
-        setJobDescriptionFile('')
-        setSuccessMessage('Upload successfully')
-        onRefresh()
+        setJdPreviewUrl("");
+        setJobDescriptionFile("");
+        setSuccessMessage("Upload successfully");
+        onRefresh();
       }
     } catch (error) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
-  }
+  };
 
   const HandleshowConfirmation = () => {
-    setShowConfirmation(true)
-  }
+    setShowConfirmation(true);
+  };
 
   const handleDelete = async (id) => {
     try {
       // get uploaded jd name
       const { data: uploadJd, error: getError } = await supabase
-        .from('jobdescription')
-        .select('jobdescription_url')
-        .eq('id', id)
-        .single()
+        .from("jobdescription")
+        .select("jobdescription_url")
+        .eq("id", id)
+        .single();
 
-      const uploadedResumeName = decodeURIComponent(uploadJd.jobdescription_url.split('/').pop())
-      console.log('1', uploadJd)
+      const uploadedResumeName = decodeURIComponent(
+        uploadJd.jobdescription_url.split("/").pop()
+      );
+      console.log("1", uploadJd);
       // delete jobdescription file from storage
       const { data, error: deleteError } = await supabase.storage
-        .from('jobdescription')
-        .remove([`${session.user.id}/${uploadedResumeName}`])
+        .from("jobdescription")
+        .remove([`${session.user.id}/${uploadedResumeName}`]);
 
-      console.log('2')
+      console.log("2");
       if (deleteError) {
-        console.log('deleteError: ', deleteError)
-        throw deleteError
+        console.log("deleteError: ", deleteError);
+        throw deleteError;
       }
 
       // delete jobdescription data from Jd table
-      await supabase.from('jobdescription').delete().eq('id', id)
-      setShowConfirmation(false)
-      onRefresh()
+      await supabase.from("jobdescription").delete().eq("id", id);
+      setShowConfirmation(false);
+      onRefresh();
     } catch (error) {
       // *modify later
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
-  }
+  };
 
   const handleCancelDelete = () => {
-    setShowConfirmation(false)
-  }
+    setShowConfirmation(false);
+  };
 
-  console.log('recuritor', recruiter)
+  console.log("recuritor", recruiter);
 
   if (recruiter === null) {
     return (
       <div className="flex flex-col gap-4 rounded-3xl items-center justify-center w-full md:w-[60%]">
         <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-lg ">
           <h2 className="text-2xl font-semibold mb-6 text-dark">
-            Before you can post a job, we kindly ask you to complete your profile.
+            Before you can post a job, we kindly ask you to complete your
+            profile.
           </h2>
-          <button className="bg-primary text-white rounded-lg px-4 py-2" onClick={onRefresh}>
-            <Link href={`/dashboard/profile/${session.user.id}}`}>Go Back </Link>
+          <button
+            className="bg-primary text-white rounded-lg px-4 py-2"
+            onClick={onRefresh}
+          >
+            <Link href={`/dashboard/profile/${session.user.id}}`}>
+              Go Back{" "}
+            </Link>
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -233,7 +248,9 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
                     <div className="flex justify-center items-center mr-1 overflow-hidden">
                       <GrDocumentPdf className="text-3xl mr-3 flex-shrink-0" />
                       <p className="max-w-[350px] overflow-hidden whitespace-nowrap text-ellipsis ">
-                        {decodeURIComponent(job.jobdescription_url.split('/').pop())}
+                        {decodeURIComponent(
+                          job.jobdescription_url.split("/").pop()
+                        )}
                       </p>
                     </div>
                     <FiDownload className="text-2xl" />
@@ -260,7 +277,7 @@ const JobMangement = ({ recruiter, jobList, onRefresh }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default JobMangement
+export default JobMangement;

@@ -1,18 +1,18 @@
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import Logo from '../../img/logo.png'
-import { useSession, signOut } from 'next-auth/react'
-import { signIn } from 'next-auth/react'
-import { sendError } from 'next/dist/server/api-utils'
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import Logo from "../../img/logo.png";
+import { useSession, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
+import { sendError } from "next/dist/server/api-utils";
 
 function Header() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
-  const [navIsVisible, setNavIsVisible] = useState(false)
+  const [navIsVisible, setNavIsVisible] = useState(false);
   const handleClick = () => {
-    setNavIsVisible(!navIsVisible)
-  }
+    setNavIsVisible(!navIsVisible);
+  };
   return (
     <>
       {/* Tablet */}
@@ -29,15 +29,21 @@ function Header() {
             Home
           </Link>
           {session && (
-            <Link className=" text-black  text-lg" href={`/dashboard/profile/${session?.user.id}`}>
+            <Link
+              className=" text-black  text-lg"
+              href={`/dashboard/profile/${session?.user.id}`}
+            >
               Dashboard
             </Link>
           )}
 
-          <Link className="hidden text-primary font-semibold text-md" href="/about">
+          <Link
+            className="hidden text-primary font-semibold text-md"
+            href="/about"
+          >
             About Us
           </Link>
-          <div className={session ? 'hidden' : 'flex gap-2'}>
+          <div className={session ? "hidden" : "flex gap-2"}>
             <Link
               className="border-[2px] m-auto rounded-full px-3 border-primary  text-lg"
               href="/signin"
@@ -51,10 +57,14 @@ function Header() {
               Sign Up
             </Link>
           </div>
-          <div className={session ? 'flex flex-col-reverse items-center' : 'hidden'}>
+          <div
+            className={
+              session ? "flex flex-col-reverse items-center" : "hidden"
+            }
+          >
             <button
               onClick={() => {
-                signOut()
+                signOut({ callbackUrl: "/" });
                 // localStorage.clear()
 
                 // set 1 Jan, 1970 expiry for every cookies
@@ -89,7 +99,7 @@ function Header() {
             <div className="bg-white w-[40px] h-[4px] rounded-b-sm"></div>
           </div>
         </div>
-        <div className={navIsVisible ? 'flex items-end' : 'hidden'}>
+        <div className={navIsVisible ? "flex items-end" : "hidden"}>
           <div className="border-[1.5px] shadow-lg border-t-0 border-primary z-10 absolute right-0 bg-white top-[60px]  justify-center items-center flex flex-col px-5 pt-6 rounded-bl-3xl pb-10 gap-3">
             <div className="px-3 py-1 font-semibold ">
               <h3>Hey: {session && session.user.name}</h3>
@@ -99,7 +109,10 @@ function Header() {
             </Link>
 
             {session && (
-              <Link className=" text-black text-lg" href={`/dashboard/profile/${session?.user.id}`}>
+              <Link
+                className=" text-black text-lg"
+                href={`/dashboard/profile/${session?.user.id}`}
+              >
                 Dashboard
               </Link>
             )}
@@ -107,7 +120,7 @@ function Header() {
               <button
                 className="text-black text-lg"
                 onClick={() => {
-                  signOut()
+                  signOut({ callbackUrl: "/" });
                 }}
               >
                 Log out
@@ -120,7 +133,7 @@ function Header() {
 
             <Link
               className={`border-[2px] shadow-lg my-auto rounded-full px-3 border-primary text-lg ${
-                session ? 'hidden' : ''
+                session ? "hidden" : ""
               }`}
               href="/signin"
             >
@@ -128,7 +141,7 @@ function Header() {
             </Link>
             <Link
               className={`border-[2px] shadow-lg my-auto rounded-full bg-primary text-white border-primary px-3 text-lg ${
-                session ? 'hidden' : ''
+                session ? "hidden" : ""
               }`}
               href="/signin"
             >
@@ -138,7 +151,7 @@ function Header() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
-export default Header
+export default Header;

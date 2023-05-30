@@ -1,118 +1,118 @@
-import { useState, useEffect } from 'react'
-import { GrStatusWarning, GrStatusGood } from 'react-icons/gr'
-import { useSession } from 'next-auth/react'
-import { createSupabaseClient } from '@/lib/supabaseClient'
-import Loading from '@/components/Loading'
+import { useState, useEffect } from "react";
+import { GrStatusWarning, GrStatusGood } from "react-icons/gr";
+import { useSession } from "next-auth/react";
+import { createSupabaseClient } from "@/lib/supabaseClient";
+import Loading from "@/components/Loading";
 
 const RecruiterProfile = ({ recruiter, onRefresh }) => {
-  const [companyName, setCompanyName] = useState('')
-  const [name, setName] = useState('')
-  const [phone, setPhone] = useState('')
-  const [email, setEmail] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
-  const [successMessage, setSuccessMessage] = useState('')
+  const [companyName, setCompanyName] = useState("");
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // set applicant data to state
   useEffect(() => {
-    if (recruiter && errorMessage === '') {
-      setCompanyName(recruiter.company)
-      setName(recruiter.name)
-      setPhone(recruiter.phone)
-      setEmail(recruiter.email)
+    if (recruiter && errorMessage === "") {
+      setCompanyName(recruiter.company);
+      setName(recruiter.name);
+      setPhone(recruiter.phone);
+      setEmail(recruiter.email);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [recruiter])
+  }, [recruiter]);
 
   useEffect(() => {
-    let timer
+    let timer;
     if (errorMessage) {
       timer = setTimeout(() => {
-        setErrorMessage('')
-      }, 3000)
+        setErrorMessage("");
+      }, 3000);
     }
     if (successMessage) {
       timer = setTimeout(() => {
-        setSuccessMessage('')
-      }, 3000)
+        setSuccessMessage("");
+      }, 3000);
     }
 
-    return () => clearTimeout(timer)
-  }, [errorMessage, successMessage])
+    return () => clearTimeout(timer);
+  }, [errorMessage, successMessage]);
 
-  const { data: session, status } = useSession()
-  const supabase = createSupabaseClient(session.supabaseAccessToken)
+  const { data: session, status } = useSession();
+  const supabase = createSupabaseClient(session.supabaseAccessToken);
 
   const companyNameHandler = (e) => {
-    setCompanyName(e.target.value)
-  }
+    setCompanyName(e.target.value);
+  };
 
   const nameHandler = (e) => {
-    setName(e.target.value)
-  }
+    setName(e.target.value);
+  };
 
   const phoneHandler = (e) => {
-    setPhone(e.target.value)
-  }
+    setPhone(e.target.value);
+  };
 
   const emailHandler = (e) => {
-    setEmail(e.target.value)
-  }
+    setEmail(e.target.value);
+  };
 
   // create profile
   const handleSubmit = async () => {
     try {
       if (!name || !phone || !email || !companyName) {
-        setErrorMessage('Please fill all the fields')
+        setErrorMessage("Please fill all the fields");
       } else {
-        const { data, error } = await supabase.from('recruiters').insert({
+        const { data, error } = await supabase.from("recruiters").insert({
           name,
           phone,
           email,
           company: companyName,
-          users_id: session.user.id
-        })
-        onRefresh()
-        setSuccessMessage('Profile created successfully')
+          users_id: session.user.id,
+        });
+        onRefresh();
+        setSuccessMessage("Profile created successfully");
 
         if (error) {
-          setErrorMessage(error.message)
-          throw new Error(error.message)
+          setErrorMessage(error.message);
+          throw new Error(error.message);
         }
       }
     } catch (error) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
-  }
+  };
 
   // update profile
   const handleUpdate = async () => {
     try {
       if (!name || !phone || !email || !companyName) {
-        setErrorMessage('Please fill all the fields')
+        setErrorMessage("Please fill all the fields");
       } else {
         const { data, error } = await supabase
-          .from('recruiters')
+          .from("recruiters")
           .update({
             name,
             phone,
             email,
-            company: companyName
+            company: companyName,
           })
-          .eq('users_id', session.user.id)
-        onRefresh()
-        setSuccessMessage('Profile updated successfully')
+          .eq("users_id", session.user.id);
+        onRefresh();
+        setSuccessMessage("Profile updated successfully");
         if (error) {
-          setErrorMessage(error.message)
-          throw new Error(error.message)
+          setErrorMessage(error.message);
+          throw new Error(error.message);
         }
       }
     } catch (error) {
-      setErrorMessage(error.message)
+      setErrorMessage(error.message);
     }
-  }
+  };
 
-  if (status === 'loading') {
-    return <Loading />
+  if (status === "loading") {
+    return <Loading />;
   }
 
   return (
@@ -122,7 +122,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         <h2 className="text-2xl font-semibold mb-6 text-dark">My Profile</h2>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">Company Name</span>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">
+            Company Name
+          </span>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="text"
@@ -133,7 +135,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">Name</span>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">
+            Name
+          </span>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="text"
@@ -143,7 +147,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">Phone</span>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">
+            Phone
+          </span>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="text"
@@ -154,7 +160,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">Email</span>
+          <span className="font-semibold after:content-['*'] after:ml-0.5">
+            Email
+          </span>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="email"
@@ -198,7 +206,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default RecruiterProfile
+export default RecruiterProfile;
