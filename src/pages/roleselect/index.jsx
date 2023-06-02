@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import supabase from "@/lib/supabaseClient";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 
 const Roleselect = () => {
   const [role, setRole] = useState("applicant");
@@ -9,46 +9,54 @@ const Roleselect = () => {
   const { data: session, status } = useSession();
   const [errorMessage, setErrorMessage] = "";
 
-  const handleChange = (event) => {
-    const selectedValue = event.target.value;
-    if (selectedValue === "") {
-      // Handle the case where the user has not selected a role
-      setErrorMessage("Please select a role.");
-    } else {
-      // Handle the case where the user has selected a role
-      setRole(selectedValue);
-    }
-  };
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const { data, error } = await supabase
-        .from("users")
-        .update({ role })
-        .eq("id", session.user.id);
-      if (error) throw error;
-      router.push("/");
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
+  if (session) {
+    const supabase = createSupabaseClient(session.supabaseAccessToken);
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <label className="block">Select your role:</label>
-      <select value={role} onChange={handleChange}>
-        <option value="">-- Select --</option>
-        <option value="applicant">Applicant</option>
-        <option value="recruiter">Recruiter</option>
-      </select>
-      <button type="submit" disabled={role === ""}>
-        Next
-      </button>
+    const handleChange = (event) => {
+      const selectedValue = event.target.value;
+      if (selectedValue === "") {
+        // Handle the case where the user has not selected a role
+        setErrorMessage("Please select a role.");
+      } else {
+        // Handle the case where the user has selected a role
+        setRole(selectedValue);
+      }
+    };
 
-      <p className="text-center text-red-500">{errorMessage}</p>
-    </form>
-  );
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        const { data, error } = await supabase
+          .from("users")
+          .update({ role })
+          .eq("id", session.user.id);
+        if (error) throw error;
+        router.push("/");
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <label className="block">Select your role:</label>
+        <select value={role} onChange={handleChange}>
+          <option value="">-- Select --</option>
+          <option value="applicant">Applicant</option>
+          <option value="recruiter">Recruiter</option>
+        </select>
+        <button type="submit" disabled={role === ""}>
+          Next
+        </button>
+
+        <p className="text-center text-red-500">{errorMessage}</p>
+      </form>
+    );
+  }
 };
 
 export default Roleselect;

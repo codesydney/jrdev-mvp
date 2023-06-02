@@ -1,43 +1,103 @@
-import { useSession } from 'next-auth/react'
-import { getSession } from 'next-auth/react'
-import supabase from '@/lib/supabaseClient'
-import Applicantdashboard from '@/components/dashboard/Applicantdashboard'
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
+import Applicantdashboard from "@/components/dashboard/Applicantdashboard";
+import { createSupabaseClient } from "@/lib/supabaseClient";
 
-const Dashboard = ({ role }) => {
-  const { data: session, status } = useSession()
+const Dashboard = ({ role, initialApplicant }) => {
+  const { data: session, status } = useSession();
+  const [applicant, setApplicant] = useState(initialApplicant);
 
-  if (status === 'unauthenticated') {
-    return <div>Access denied. Please log in. Redirect to login page then.</div>
+  const fetchApplicantData = async () => {
+    if (role === "applicant") {
+      const supabase = createSupabaseClient(session.supabaseAccessToken);
+      const userId = session.user.id;
+      const applicant = await supabase
+        .from("applicants")
+        .select()
+        .limit(1)
+        .single()
+        .eq("users_id", userId);
+
+      setApplicant(applicant.data);
+    }
+  };
+
+  if (status === "unauthenticated") {
+    return (
+      <div>Access denied. Please log in. Redirect to login page then.</div>
+    );
   }
 
-  if (status === 'loading') {
-    return <div>Loading page...</div>
+  if (status === "loading") {
+    return <div>Loading page...</div>;
   }
 
   return (
     <>
-      {role === 'applicant' && <Applicantdashboard />}
-      {role === 'recruiter' && <div>recruiter dashboard</div>}
+      {role === "applicant" && (
+        <Applicantdashboard
+          applicant={applicant}
+          onRefresh={fetchApplicantData}
+        />
+      )}
+      {role === "recruiter" && <div>recruiter dashboard</div>}
     </>
-  )
-}
+  );
+};
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context)
+  const session = await getSession(context);
   if (!session?.user?.id) {
     return {
       redirect: {
-        destination: '/login',
-        permanent: false
-      }
+        destination: "/signup",
+        permanent: false,
+      },
+    };
+  }
+
+  const supabase = createSupabaseClient(session.supabaseAccessToken);
+  const userId = session.user.id;
+  const users = await supabase
+    .from("users")
+    .select("role")
+    .limit(1)
+    .single()
+    .eq("id", userId);
+
+  console.log("users: ", users);
+  if (!users.data) {
+    return {
+      redirect: {
+        destination: "/signup",
+        permanent: false,
+      },
+    };
+  }
+
+  if (users.data.role === "applicant") {
+    const applicant = await supabase
+      .from("applicants")
+      .select()
+      .limit(1)
+      .single()
+      .eq("users_id", userId);
+    console.log("applicant: ", applicant.data);
+    if (!applicant.data) {
+      return {
+        props: { role: users.data.role },
+      };
+    } else {
+      return {
+        props: { role: users.data.role, initialApplicant: applicant.data },
+      };
     }
   }
 
-  const userId = session.user.id
-  const res = await supabase.from('users').select('role').eq('id', userId)
   return {
-    props: { role: res.data[0].role }
-  }
+    props: { role: users.data.role, initialApplicant: applicant.data },
+  };
 }
 
-export default Dashboard
+export default Dashboard;

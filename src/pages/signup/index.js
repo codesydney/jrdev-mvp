@@ -1,43 +1,42 @@
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { FcGoogle } from "react-icons/fc";
-import Link from "next/link";
-import signUp from "../../../public/assets/signUp.png";
-import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import { FcGoogle } from 'react-icons/fc'
+import Link from 'next/link'
+import signUp from '../../../public/assets/signUp.png'
+import Image from 'next/image'
+import { signIn } from 'next-auth/react'
 
 const Signup = () => {
-
   const [spinner, setSpinner] = useState(false)
-  const { data: seesion, error } = useSession()
+  const { data: seesion, status } = useSession()
+  const [formInput, setFormInput] = useState({ email: '', password: '' })
 
   const signin = () => {
-    signIn("google", { callbackUrl: "/" });
-  };
+    signIn('google', { callbackUrl: '/' })
+  }
 
   const handleChange = async (event) => {
-    const { name, value } = event.target;
-    setFormInput({ ...formInput, [name]: value });
-  };
+    const { name, value } = event.target
+    setFormInput({ ...formInput, [name]: value })
+  }
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     //send data to sign in endpoint
-  };
+  }
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="w-full h-full">
       <div className="w-[80%] min-h-screen flex flex-col sm:flex-row justify-center items-center mx-auto bg-gradient-to-tr from-white to-bg-200">
         {/* SignUp form */}
         <div className="w-full h-screen flex items-center justify-center flex-col md:w-1/2 xl:w-1/3 p-6 sm:p-12 md:border-double md:border-r-4 md:rounded-tr-[15%]">
-          <h1 className="text-2xl font-bold text-center mb-5">
-            Please Sign Up
-          </h1>
-          <form
-            className="flex flex-col items-center justify-center"
-            onSubmit={handleSubmit}
-          >
+          <h1 className="text-2xl font-bold text-center mb-5">Please Sign Up</h1>
+          <form className="flex flex-col items-center justify-center" onSubmit={handleSubmit}>
             <label className="block">Email</label>
             <input
               className="border-2 w-full border-gray-300 p-2 rounded-lg m-2"
@@ -47,10 +46,8 @@ const Signup = () => {
               required={true}
             />
 
-            {formInput.email !== "" && !emailRegex.test(formInput.email) && (
-              <p className="text-center text-red-500">
-                Entered Email address is invalid
-              </p>
+            {formInput.email !== '' && !emailRegex.test(formInput.email) && (
+              <p className="text-center text-red-500">Entered Email address is invalid</p>
             )}
 
             <label className="block">Password</label>
@@ -62,15 +59,13 @@ const Signup = () => {
               required={true}
             />
 
-            {formInput.password !== "" && formInput.password.length < 8 && (
+            {formInput.password !== '' && formInput.password.length < 8 && (
               <p className=" text-center text-red-500">
                 Password needs to be at least 8 characters
               </p>
             )}
 
-            <p className={success ? "text-text-200" : "text-red-500"}>
-              {successMessage}
-            </p>
+            {/* <p className={success ? 'text-text-200' : 'text-red-500'}>{successMessage}</p> */}
             <button
               type="submit"
               className="w-full disabled block bg-indigo-100 hover:bg-indigo-200 hover:scale-105 focus:bg-teal-700 text-white font-semibold rounded-lg px-4 py-3 mt-6"
@@ -100,15 +95,13 @@ const Signup = () => {
                   Logining...
                 </div>
               ) : (
-                "Sign In"
+                'Sign In'
               )}
             </button>
           </form>
           <hr className="mt-6 border-gray-300 w-full " />
           <button
-
             onClick={signin}
-
             className="
             relative
             disabled:opacity-70
@@ -133,7 +126,7 @@ const Signup = () => {
             Continue with Google
           </button>
           <p className="mt-2 pb-2 font-semibold">
-            Don't have an account?{" "}
+            Do not have an account?{' '}
             <Link href="/signin" className="text-blue-500 hover:text-blue-700">
               Sign Up
             </Link>
@@ -145,7 +138,7 @@ const Signup = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Signup;
+export default Signup
