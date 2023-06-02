@@ -5,7 +5,7 @@ function Layout({ children, style }) {
     <div>
       <Header />
       <div className={style}>
-        <div className="py-5">{children}</div>
+        <div>{children}</div>
       </div>
       {/* <Footer/> */}
     </div>

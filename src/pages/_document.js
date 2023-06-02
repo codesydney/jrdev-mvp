@@ -8,7 +8,7 @@ export default function Document() {
           //fontAwesome icon kit link
           async
           src="https://kit.fontawesome.com/4b926c6456.js"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         ></script>
       </Head>
 
