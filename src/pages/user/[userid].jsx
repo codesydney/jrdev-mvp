@@ -27,7 +27,7 @@ const User = () => {
           required={true}
         />
 
-        {name !== "" && name.length < 1 && (
+        {name !== "" && name.length < 2 && (
           <p className="text-center text-red-500">Name is required</p>
         )}
 

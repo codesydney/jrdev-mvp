@@ -18,6 +18,9 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const [resumePreviewUrl, setResumePreviewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  let emailRegex =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
   // set applicant data to state
   useEffect(() => {
     if (applicant && errorMessage === "") {
@@ -42,18 +45,6 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const { data: session, status } = useSession();
 
   const supabase = createSupabaseClient(session.supabaseAccessToken);
-
-  const nameHandler = (e) => {
-    setName(e.target.value);
-  };
-
-  const phoneHandler = (e) => {
-    setPhone(e.target.value);
-  };
-
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-  };
 
   const resumeHandler = (e) => {
     e.preventDefault();
@@ -187,42 +178,82 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         </h2>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+        {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Name</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
             Name
-          </span>
+          </span>)}</label>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="text"
+            id="name"
             placeholder="Name"
             value={name}
-            onChange={nameHandler}
+            onChange={(e) => setName(e.target.value)}
+            required={resumeFile || applicant?.resume_url ? false : true}
           />
-        </label>
-        <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
-            Phone
-          </span>
-          <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-            type="text"
-            placeholder="Phone"
-            value={phone}
-            onChange={phoneHandler}
-          />
-        </label>
+
+          {name !== "" &&
+              name.length < 2 &&
+              (document.getElementById("name").required === true ? (
+                <p className="text-center text-red-500">
+                  Name is required. It must be at minimum 2 characters
+                </p>
+              ) : (
+                <p className="text-center text-red-500">
+                  Name must be at minimum 2 characters
+                </p>
+              ))}
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+        {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Phone</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
+            Phone
+          </span>)}</label>
+          <input
+            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            type="tel"
+            id="phone"
+            placeholder="Phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            required={resumeFile || applicant?.resume_url ? false : true}
+          />
+
+              {/*Phone number validation */}
+            {phone !== "" &&
+            /^\[0-9\]+$/.test(phone) &&
+            phone.length < 10 &&
+            document.getElementById("search").required === true ? (
+              <p className="text-center text-red-500">
+                Phone number is required. It must be at least 10 numbers.
+              </p>
+            ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
+              <p className="text-center text-red-500">Numbers only</p>
+            ) : phone !== "" && phone.length < 10 ? (
+              document.getElementById("search").required === false && (
+                <p className="text-center text-red-500">
+                  Phone number must be at least 10 numbers
+                </p>
+              )
+            ) : null}
+        
+
+        <label>
+        {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Email</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
             Email
-          </span>
+          </span>)}</label>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={emailHandler}
+            onChange={(e) => setEmail(e.target.value)}
+            required={resumeFile || applicant?.resume_url ? false : true}
           />
-        </label>
+       
+        {email !== "" && !emailRegex.test(email) && (
+          <p className="text-center text-red-500">
+            Entered Email address is invalid
+          </p>
+        )}
 
         <label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
           {resumeFile || applicant?.resume_url ? (
@@ -231,15 +262,21 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             <span className="font-semibold after:content-['*'] after:ml-0.5">
               Upload Resume
             </span>
-          )}
+          )}</label>
           <GrDocumentUpload className="text-5xl mt-2" />
           <input
             type="file"
             accept="application/pdf"
             onChange={resumeHandler}
             className="hidden"
+            required={resumeFile || applicant?.resume_url ? false : true}
           />
-        </label>
+
+          {resumeFile ? null : (
+              <p className="text-center text-red-500">A resume is required</p>
+            )}
+
+      
 
         {/* Preview resume */}
         {resumePreviewUrl && (
