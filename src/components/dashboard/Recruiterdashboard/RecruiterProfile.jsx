@@ -12,6 +12,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  let emailRegex =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
   // set applicant data to state
   useEffect(() => {
     if (recruiter && errorMessage === "") {
@@ -134,6 +137,10 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
 
+        {companyName !== "" && companyName.length < 2 && (
+          <p className="text-center text-red-500">Company name is required</p>
+        )}
+
         <label>
           <span className="font-semibold after:content-['*'] after:ml-0.5">
             Name
@@ -146,18 +153,36 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             onChange={nameHandler}
           />
         </label>
+
+        {name !== "" && name.length < 2 && (
+          <p className="text-center text-red-500">Name is required</p>
+        )}
+
         <label>
           <span className="font-semibold after:content-['*'] after:ml-0.5">
             Phone
           </span>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-            type="text"
+            type="tel"
             placeholder="Phone"
             value={phone}
             onChange={phoneHandler}
+            required={true}
           />
         </label>
+
+          {/*Phone number validation */}
+          {phone !== "" &&
+            /^\[0-9\]+$/.test(phone) &&
+            phone.length < 10 &&
+            document.getElementById("search").required === true ? (
+              <p className="text-center text-red-500">
+                Phone number is required. It must be at least 10 numbers.
+              </p>
+            ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
+              <p className="text-center text-red-500">Numbers only</p>
+            ) : null}
 
         <label>
           <span className="font-semibold after:content-['*'] after:ml-0.5">
@@ -171,6 +196,12 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             onChange={emailHandler}
           />
         </label>
+
+        {email !== "" && !emailRegex.test(email) && (
+          <p className="text-center text-red-500">
+            Entered Email address is invalid
+          </p>
+        )}
 
         {/* Error message */}
         {errorMessage && (

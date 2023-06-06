@@ -12,6 +12,15 @@ const User = () => {
   let emailRegex =
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
+    const resumeHandler = (e) => {
+      e.preventDefault();
+      const file = e.target.files[0];
+      setResumeFile(file);
+      if (file) {
+        setResumePreviewUrl(URL.createObjectURL(file));
+      }
+    };
+
   const handleSubmit = () => {
     console.log(name, email, phone, resume);
   };
@@ -51,7 +60,6 @@ const User = () => {
           name="phone"
           onChange={(e) => setPhone(e.target.value)}
           required={true}
-          pattern="[0-9]{4}[0-9]{3}[0-9]{3}"
         />
 
         {phone !== "" && phone.length < 10 && (
@@ -60,29 +68,27 @@ const User = () => {
           </p>
         )}
 
-        {/*should this be type=file?*/}
-        <label className="block">Upload your resume</label>
-        <input
-          type="file"
-          name="resume"
-          accept=".pdf"
-          accessTyp
-          //onChange={(e) => setResume(e.target.value)}
-          required={true}
-        />
-        <input
-          className="w-full disabled block bg-indigo-100 hover:bg-indigo-200 hover:scale-105 focus:bg-teal-700 text-white font-semibold rounded-lg px-4 py-3 mt-6"
-          type="submit"
-          onClick={(e) => setResume(e.target.value)}
-        >
-          <div className="text-center">
-            <i className="fa-light fa-file-arrow-up fa-2xl"></i>
-          </div>
-        </input>
+{/*Update colours and stuff in styles > globals.css */}
+<div className="fileUploadContainer">
+              <label
+                htmlFor="fileUpload"
+                className="text-center custom-file-upload"
+              >
+                <i class="fa fa-file-arrow-up fileIcon"></i>
+                <div>Upload</div>
+              </label>
+              <input
+                id="fileUpload"
+                type="file"
+                name="fileUpload"
+                onChange={resumeHandler}
+                required={true}
+              />
 
-        {resume.files.length == 0 && (
-          <p className="text-center text-red-500">A Resume is required</p>
-        )}
+              {required && resumeFile ? null : (
+                <p className="text-center text-red-500">A resume is required</p>
+              )}
+            </div>
 
         <button
           className="relative

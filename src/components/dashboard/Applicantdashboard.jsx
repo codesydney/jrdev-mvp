@@ -276,6 +276,32 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
               <p className="text-center text-red-500">A resume is required</p>
             )}
 
+{/*Update colours and stuff in styles > globals.css */}
+<div className="fileUploadContainer">
+              <label
+                htmlFor="fileUpload"
+                className="text-center custom-file-upload"
+              ><i class="fa fa-file-arrow-up fileIcon"></i>
+                {resumeFile || applicant?.resume_url && required===false ? (
+                <span className="font-semibold">Update Resume</span>
+              ) : (
+                <span className="font-semibold after:content-['*'] after:ml-0.5">
+                  Upload Resume
+                </span>
+              )}</label>
+              <input
+                id="fileUpload"
+                type="file"
+                name="fileUpload"
+                onChange={resumeHandler}
+                required={resumeFile || applicant?.resume_url ? false : true}
+              />
+
+              {required && resumeFile ? null : (
+                <p className="text-center text-red-500">A resume is required</p>
+              )}
+            </div>
+
       
 
         {/* Preview resume */}
