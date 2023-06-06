@@ -62,11 +62,16 @@ const User = () => {
           required={true}
         />
 
-        {phone !== "" && phone.length < 10 && (
-          <p className="text-center text-red-500">
-            Phone number needs to be 10 numbers
-          </p>
-        )}
+         {/*Phone number validation */}
+         {phone !== "" &&
+            /^\[0-9\]+$/.test(phone) &&
+            phone.length < 10 ? (
+              <p className="text-center text-red-500">
+                Phone number is required. It must be at least 10 numbers.
+              </p>
+            ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
+              <p className="text-center text-red-500">Numbers only</p>
+            ) : null}
 
 {/*Update colours and stuff in styles > globals.css */}
 <div className="fileUploadContainer">
@@ -75,13 +80,14 @@ const User = () => {
                 className="text-center custom-file-upload"
               >
                 <i class="fa fa-file-arrow-up fileIcon"></i>
-                <div>Upload</div>
+                <span>Upload Resume</span>
               </label>
               <input
                 id="fileUpload"
                 type="file"
                 name="fileUpload"
                 onChange={resumeHandler}
+                value={resumeFile}
                 required={true}
               />
 

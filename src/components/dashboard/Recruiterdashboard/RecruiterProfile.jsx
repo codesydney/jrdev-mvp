@@ -166,6 +166,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
             type="tel"
             placeholder="Phone"
+            id="phone"
             value={phone}
             onChange={phoneHandler}
             required={true}
@@ -175,8 +176,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           {/*Phone number validation */}
           {phone !== "" &&
             /^\[0-9\]+$/.test(phone) &&
-            phone.length < 10 &&
-            document.getElementById("search").required === true ? (
+            phone.length < 10 ? (
               <p className="text-center text-red-500">
                 Phone number is required. It must be at least 10 numbers.
               </p>

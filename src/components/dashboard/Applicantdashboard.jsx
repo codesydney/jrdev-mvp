@@ -179,7 +179,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
 
         <label>
         {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Name</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
-            Name
+        Input your Name
           </span>)}</label>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
@@ -205,7 +205,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
 
         <label>
         {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Phone</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
-            Phone
+        Input your Phone
           </span>)}</label>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
@@ -238,7 +238,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
 
         <label>
         {resumeFile || applicant?.resume_url ? (<span className="font-semibold">Update Email</span>):(<span className="font-semibold after:content-['*'] after:ml-0.5">
-            Email
+        Input your Email
           </span>)}</label>
           <input
             className="w-full p-2 mb-4 border-[3px] border-dark rounded"
@@ -255,7 +255,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           </p>
         )}
 
-        <label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
+        {/*<label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
           {resumeFile || applicant?.resume_url ? (
             <span className="font-semibold">Update Resume</span>
           ) : (
@@ -274,7 +274,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
 
           {resumeFile ? null : (
               <p className="text-center text-red-500">A resume is required</p>
-            )}
+            )}*/}
 
 {/*Update colours and stuff in styles > globals.css */}
 <div className="fileUploadContainer">
@@ -289,6 +289,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
                   Upload Resume
                 </span>
               )}</label>
+              <GrDocumentUpload className="text-5xl mt-2" />
               <input
                 id="fileUpload"
                 type="file"
