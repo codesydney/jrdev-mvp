@@ -19,7 +19,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const [errorMessage, setErrorMessage] = useState("");
 
   let emailRegex =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 
   // set applicant data to state
   useEffect(() => {
@@ -249,9 +249,9 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             required={resumeFile || applicant?.resume_url ? false : true}
           />
        
-        {email !== "" && !emailRegex.test(email) && (
+       {email !== "" && !emailRegex.test(email) && (
           <p className="text-center text-red-500">
-            Entered Email address is invalid
+            Please enter a valid email address.
           </p>
         )}
 

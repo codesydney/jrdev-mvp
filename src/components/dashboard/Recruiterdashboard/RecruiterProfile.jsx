@@ -13,7 +13,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   let emailRegex =
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
 
   // set applicant data to state
   useEffect(() => {

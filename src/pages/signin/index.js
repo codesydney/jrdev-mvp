@@ -11,15 +11,14 @@ import Loading from "@/components/Loading";
 const Signup = () => {
   const [spinner, setSpinner] = useState(false);
   const { data: seesion, status } = useSession();
-  const [formInput, setFormInput] = useState({ email: "", password: "" });
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  let emailRegex =
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
   const signin = () => {
     signIn("google", { callbackUrl: "/" });
-  };
-
-  const handleChange = async (event) => {
-    const { name, value } = event.target;
-    setFormInput({ ...formInput, [name]: value });
   };
 
   const handleSubmit = async (event) => {
@@ -44,40 +43,51 @@ const Signup = () => {
             className="flex flex-col items-center justify-center"
             onSubmit={handleSubmit}
           >
-            <label className="block">Email</label>
+
+            <label className="self-start block">Email</label>
             <input
-              className="border-2 w-full border-gray-300 p-2 rounded-lg m-2"
+              className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
               type="email"
-              placeholder="Email"
-              onChange={handleChange}
+              placeholder="you@xample.com"
+              onChange={(e) => setEmail(e.target.value)}
               required={true}
             />
+            
 
-            {formInput.email !== "" && !emailRegex.test(formInput.email) && (
-              <p className="text-center text-red-500">
-                Entered Email address is invalid
-              </p>
-            )}
+{email !== "" && !emailRegex.test(email) && (
+          <p className="text-center invalid:visible text-center text-red-500">
+            Please enter a valid email address.
+          </p>
+        )}
+    
 
-            <label className="block">Password</label>
+
+            <label className="self-start block">Password</label>
             <input
-              className="border-2 w-full border-gray-300 p-2 rounded-lg m-2"
+              className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
               type="password"
               placeholder="Password"
-              onChange={handleChange}
+              onChange={(e) => setPassword(e.target.value)}
               required={true}
             />
 
-            {formInput.password !== "" && formInput.password.length < 8 && (
-              <p className=" text-center text-red-500">
+            {password !== "" && password.length < 8 && (
+              <p className="w-64 invalid:visible text-center text-red-500 ">
                 Password needs to be at least 8 characters
               </p>
             )}
 
             {/* <p className={success ? 'text-text-200' : 'text-red-500'}>{successMessage}</p> */}
             <button
+            disabled={
+              !email ||
+              !emailRegex.test(email) ||
+              !password
+            }
               type="submit"
-              className="w-full disabled block bg-indigo-100 hover:bg-indigo-200 hover:scale-105 focus:bg-teal-700 text-white font-semibold rounded-lg px-4 py-3 mt-6"
+              className="w-64 block font-semibold no-underline text-xl bg-primary text-white rounded-lg px-4 py-3 mt-6 disabled:opacity-50
+              disabled:cursor-not-allowed"
+              //className="w-full block bg-indigo-100 hover:bg-indigo-200 hover:scale-105 focus:bg-teal-700 text-white font-semibold rounded-lg px-4 py-3 mt-6"
             >
               {spinner ? (
                 <div className="flex justify-center items-center">
@@ -101,7 +111,7 @@ const Signup = () => {
                       d="M4 12a8 8 0 018-8v1a7 7 0 00-7 7h1zm0 0h1v1a7 7 0 007-7H4v1zm0 0v1h1a7 7 0 007 7V4h-1zm0 0v1a8 8 0 018 8h-1a7 7 0 00-7-7z"
                     ></path>
                   </svg>
-                  Logining...
+                  Logging in...
                 </div>
               ) : (
                 "Sign In"
@@ -109,7 +119,7 @@ const Signup = () => {
             </button>
           </form>
 
-          <hr className="mt-6 border-gray-300 w-full " />
+          <hr className="mt-6 border-gray-300 w-full" />
           <button
             onClick={signin}
             className="
@@ -119,7 +129,7 @@ const Signup = () => {
             rounded-lg
             hover:opacity-80
             transition
-            w-full
+            w-64
             bg-white 
             border-black 
             text-black
@@ -135,7 +145,7 @@ const Signup = () => {
             />
             Continue with Google
           </button>
-          <p className="mt-2 pb-2 font-semibold">
+          <p className="mt-2 pb-2 text-center font-semibold w-64">
             Do not have an account?{" "}
             <Link href="/signin" className="text-blue-500 hover:text-blue-700">
               Sign Up
