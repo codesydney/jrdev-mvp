@@ -182,7 +182,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         Input your Name
           </span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             id="name"
             placeholder="Name"
@@ -194,11 +194,11 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           {name !== "" &&
               name.length < 2 &&
               (document.getElementById("name").required === true ? (
-                <p className="text-center text-red-500">
+                <p className="text-center invalid:visible text-center text-red-500">
                   Name is required. It must be at minimum 2 characters
                 </p>
               ) : (
-                <p className="text-center text-red-500">
+                <p className="text-center invalid:visible text-center text-red-500">
                   Name must be at minimum 2 characters
                 </p>
               ))}
@@ -208,7 +208,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         Input your Phone
           </span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="tel"
             id="phone"
             placeholder="Phone"
@@ -222,14 +222,14 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             /^\[0-9\]+$/.test(phone) &&
             phone.length < 10 &&
             document.getElementById("search").required === true ? (
-              <p className="text-center text-red-500">
+              <p className="text-center invalid:visible text-center text-red-500">
                 Phone number is required. It must be at least 10 numbers.
               </p>
             ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
-              <p className="text-center text-red-500">Numbers only</p>
+              <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : phone !== "" && phone.length < 10 ? (
               document.getElementById("search").required === false && (
-                <p className="text-center text-red-500">
+                <p className="text-center invalid:visible text-center text-red-500">
                   Phone number must be at least 10 numbers
                 </p>
               )
@@ -241,7 +241,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
         Input your Email
           </span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="email"
             placeholder="you@example.com"
             value={email}
@@ -250,7 +250,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           />
        
        {email !== "" && !emailRegex.test(email) && (
-          <p className="text-center text-red-500">
+          <p className="text-center invalid:visible text-center text-red-500">
             Please enter a valid email address.
           </p>
         )}
@@ -299,7 +299,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
               />
 
               {required && resumeFile ? null : (
-                <p className="text-center text-red-500">A resume is required</p>
+                <p className="text-center invalid:visible text-center text-red-500">A resume is required</p>
               )}
             </div>
 

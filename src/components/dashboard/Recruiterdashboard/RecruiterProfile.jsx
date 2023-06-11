@@ -129,7 +129,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             Company Name
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Company Name"
             value={companyName}
@@ -138,7 +138,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
         {companyName !== "" && companyName.length < 2 && (
-          <p className="text-center text-red-500">Company name is required</p>
+          <p className="text-center invalid:visible text-center text-red-500">Company name is required</p>
         )}
 
         <label>
@@ -146,7 +146,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             Name
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Name"
             value={name}
@@ -155,7 +155,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
         {name !== "" && name.length < 2 && (
-          <p className="text-center text-red-500">Name is required</p>
+          <p className="text-center invalid:visible text-center text-red-500">Name is required</p>
         )}
 
         <label>
@@ -163,7 +163,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             Phone
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="tel"
             placeholder="Phone"
             id="phone"
@@ -177,11 +177,11 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           {phone !== "" &&
             /^\[0-9\]+$/.test(phone) &&
             phone.length < 10 ? (
-              <p className="text-center text-red-500">
+              <p className="text-center invalid:visible text-center text-red-500">
                 Phone number is required. It must be at least 10 numbers.
               </p>
             ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
-              <p className="text-center text-red-500">Numbers only</p>
+              <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : null}
 
         <label>
@@ -189,7 +189,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             Email
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="email"
             placeholder="you@example.com"
             value={email}
@@ -198,7 +198,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
         {email !== "" && !emailRegex.test(email) && (
-          <p className="text-center text-red-500">
+          <p className="text-center invalid:visible text-center text-red-500">
             Entered Email address is invalid
           </p>
         )}
