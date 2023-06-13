@@ -13,7 +13,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [successMessage, setSuccessMessage] = useState("");
 
   let emailRegex =
-  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
   // set applicant data to state
   useEffect(() => {
@@ -125,11 +125,11 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         <h2 className="text-2xl font-semibold mb-6 text-dark">My Profile</h2>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Company Name
           </span>
           <input
-            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Company Name"
             value={companyName}
@@ -141,12 +141,14 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           <p className="text-center invalid:visible text-center text-red-500">Company name is required</p>
         )}
 
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Name
           </span>
           <input
-            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Name"
             value={name}
@@ -158,12 +160,14 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           <p className="text-center invalid:visible text-center text-red-500">Name is required</p>
         )}
 
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Phone
           </span>
           <input
-            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="tel"
             placeholder="Phone"
             id="phone"
@@ -175,21 +179,23 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
 
           {/*Phone number validation */}
           {phone !== "" &&
-            /^\[0-9\]+$/.test(phone) &&
+            /^\d+$/.test(phone) &&
             phone.length < 10 ? (
               <p className="text-center invalid:visible text-center text-red-500">
                 Phone number is required. It must be at least 10 numbers.
               </p>
-            ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
+            ) : phone !== "" && !/^\d+$/.test(phone) ? (
               <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : null}
 
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Email
           </span>
           <input
-            className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="email"
             placeholder="you@example.com"
             value={email}
@@ -202,6 +208,8 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             Entered Email address is invalid
           </p>
         )}
+
+        <br />
 
         {/* Error message */}
         {errorMessage && (

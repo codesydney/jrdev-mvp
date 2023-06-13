@@ -11,7 +11,7 @@ const User = () => {
   const required=true;
 
   let emailRegex =
-  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
     const resumeHandler = (e) => {
       e.preventDefault();
@@ -70,12 +70,12 @@ const User = () => {
 
          {/*Phone number validation */}
          {phone !== "" &&
-            /^\[0-9\]+$/.test(phone) &&
+            /^\d+$/.test(phone) &&
             phone.length < 10 ? (
               <p className="text-center invalid:visible text-center text-red-500">
                 Phone number is required. It must be at least 10 numbers.
               </p>
-            ) : phone !== "" && !/^\[0-9\]+$/.test(phone) ? (
+            ) : phone !== "" && !/^\d+$/.test(phone) ? (
               <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : null}
 

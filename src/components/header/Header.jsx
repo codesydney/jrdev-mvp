@@ -77,7 +77,7 @@ function Header() {
               Log out
             </button>
             <div className="h-1/2 border-[1px] w-full border-dark px-3 py-1 rounded-t-xl text-white bg-primary font-semibold ">
-              <h3>Hey: {session && session.user.name}</h3>
+              <h3>Hey {session && session.user.name}</h3>
             </div>
           </div>
         </div>

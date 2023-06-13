@@ -20,7 +20,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const required = (resumeFile || applicant?.resume_url) ? false : true;
 
   let emailRegex =
-  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
   // set applicant data to state
   useEffect(() => {
