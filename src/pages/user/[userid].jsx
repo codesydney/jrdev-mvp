@@ -8,6 +8,7 @@ const User = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [resume, setResume] = useState("");
+  const required=true;
 
   let emailRegex =
   /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/
@@ -56,6 +57,8 @@ const User = () => {
           </p>
         )}
 
+        <br />
+
         <label className="block">Input your phone</label>
         <input
         className="border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
@@ -82,7 +85,7 @@ const User = () => {
                 htmlFor="fileUpload"
                 className="text-center custom-file-upload"
               >
-                <i class="fa fa-file-arrow-up fileIcon"></i>
+                <i className="fa fa-file-arrow-up fileIcon"></i>
                 <span>Upload Resume</span>
               </label>
               <input

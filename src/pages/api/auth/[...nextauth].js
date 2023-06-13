@@ -43,6 +43,7 @@ export const authOptions = {
       return session;
     },
   },
+  schema: 'public', 
 };
 
 export default NextAuth(authOptions);
