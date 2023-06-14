@@ -38,9 +38,11 @@ const User = () => {
           required={true}
         />
 
+<div style={{ height: '0em' }}>
         {name !== "" && name.length < 2 && (
           <p className="text-center invalid:visible text-center text-red-500">Name is required</p>
         )}
+        </div>
 
         <label className="block">Input your email</label>
         <input
@@ -51,11 +53,13 @@ const User = () => {
           required={true}
         />
 
+<div style={{ height: '0em' }}>
         {email !== "" && !emailRegex.test(email) && (
           <p className="text-center invalid:visible text-center text-red-500">
             Entered Email address is invalid
           </p>
         )}
+        </div>
 
         <br />
 
@@ -69,6 +73,7 @@ const User = () => {
         />
 
          {/*Phone number validation */}
+         <div style={{ height: '0em' }}>
          {phone !== "" &&
             /^\d+$/.test(phone) &&
             phone.length < 10 ? (
@@ -78,6 +83,9 @@ const User = () => {
             ) : phone !== "" && !/^\d+$/.test(phone) ? (
               <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : null}
+            </div>
+
+            <br />
 
 {/*Update colours and stuff in styles > globals.css */}
 <div className="fileUploadContainer">

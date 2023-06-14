@@ -137,9 +137,11 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
 
-        {companyName !== "" && companyName.length < 2 && (
-          <p className="text-center invalid:visible text-center text-red-500">Company name is required</p>
-        )}
+        <div style={{ height: '0em' }}>
+        {companyName !== "" && companyName.length < 2 ? 
+          (<p className="text-center invalid:visible text-center text-red-500">Company name is required, needs to be at least 2 characters.</p>):(null)
+        }
+        </div>
 
         <br />
 
@@ -156,9 +158,11 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
 
+        <div style={{ height: '0em' }}>
         {name !== "" && name.length < 2 && (
-          <p className="text-center invalid:visible text-center text-red-500">Name is required</p>
+          <p className="text-center invalid:visible text-center text-red-500">Name is required, needs to be at least 2 characters.</p>
         )}
+        </div>
 
         <br />
 
@@ -178,6 +182,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         </label>
 
           {/*Phone number validation */}
+          <div style={{ height: '0em' }}>
           {phone !== "" &&
             /^\d+$/.test(phone) &&
             phone.length < 10 ? (
@@ -187,6 +192,7 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
             ) : phone !== "" && !/^\d+$/.test(phone) ? (
               <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
             ) : null}
+            </div>
 
         <br />
 
@@ -203,11 +209,13 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
 
+        <div style={{ height: '0em' }}>
         {email !== "" && !emailRegex.test(email) && (
           <p className="text-center invalid:visible text-center text-red-500">
             Entered Email address is invalid
           </p>
         )}
+        </div>
 
         <br />
 

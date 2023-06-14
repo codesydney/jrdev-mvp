@@ -193,6 +193,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             required
           />
 
+<div style={{ height: '0em' }}>
           {name !== "" &&
               name.length < 2 &&
               (required === true ? (
@@ -204,6 +205,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
                   Name must be at minimum 2 characters
                 </p>
               ))}
+              </div>
 
               <br />
 
@@ -222,6 +224,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
           />
 
               {/*Phone number validation */}
+              <div style={{ height: '0em' }}>
             {phone !== "" &&
             /^\d+$/.test(phone) &&
             phone.length < 10 &&
@@ -238,6 +241,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
                 </p>
               )
             ) : null}
+            </div>
         
         <br />
 
@@ -254,11 +258,15 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             required
           />
        
+       <div style={{ height: '0em' }}>
        {email !== "" && !emailRegex.test(email) && (
           <p className="text-center invalid:visible text-center text-red-500">
             Please enter a valid email address.
           </p>
         )}
+        </div>
+
+        <br />
 
         {/*<label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
           {resumeFile || applicant?.resume_url ? (
