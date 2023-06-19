@@ -17,6 +17,10 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const [resumeFile, setResumeFile] = useState("");
   const [resumePreviewUrl, setResumePreviewUrl] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const required = (resumeFile || applicant?.resume_url) ? false : true;
+
+  let emailRegex =
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
   // set applicant data to state
   useEffect(() => {
@@ -42,18 +46,6 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
   const { data: session, status } = useSession();
 
   const supabase = createSupabaseClient(session.supabaseAccessToken);
-
-  const nameHandler = (e) => {
-    setName(e.target.value);
-  };
-
-  const phoneHandler = (e) => {
-    setPhone(e.target.value);
-  };
-
-  const emailHandler = (e) => {
-    setEmail(e.target.value);
-  };
 
   const resumeHandler = (e) => {
     e.preventDefault();
@@ -182,64 +174,149 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
     <div className="flex items-center justify-center min-h-screen ">
       <div className="w-full max-w-md p-4 sm:p-8 bg-white rounded-lg shadow-md ">
         {/* application form */}
+        <form>
         <h2 className="text-2xl font-semibold mb-6 text-dark">
           Application Form
         </h2>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
-            Name
-          </span>
+        {required ? (<span className="font-semibold after:content-['*'] after:ml-0.5">
+        Input your Name
+          </span>):(<span className="font-semibold">Update Name</span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
+            id="name"
             placeholder="Name"
             value={name}
-            onChange={nameHandler}
+            onChange={(e) => setName(e.target.value)}
+            required
           />
-        </label>
-        <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
-            Phone
-          </span>
+
+<div style={{ height: '0em' }}>
+          {name !== "" &&
+              name.length < 2 &&
+              (required === true ? (
+                <p className="w-full text-center invalid:visible text-center text-red-500">
+                  Name is required. It must be at minimum 2 characters
+                </p>
+              ) : (
+                <p className="w-full text-center invalid:visible text-center text-red-500">
+                  Name must be at minimum 2 characters
+                </p>
+              ))}
+              </div>
+
+              <br />
+
+              <label>
+        {required ? (<span className="font-semibold after:content-['*'] after:ml-0.5">
+        Input your Phone
+          </span>):(<span className="font-semibold">Update Phone</span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-            type="text"
+            className="w-full border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            type="tel"
+            id="phone"
             placeholder="Phone"
             value={phone}
-            onChange={phoneHandler}
+            onChange={(e) => setPhone(e.target.value)}
+            required
           />
-        </label>
+
+              {/*Phone number validation */}
+              <div style={{ height: '0em' }}>
+            {phone !== "" &&
+            /^\d+$/.test(phone) &&
+            phone.length < 10 &&
+            required === true ? (
+              <p className="w-full text-center invalid:visible text-center text-red-500">
+                Phone number is required. It must be at least 10 numbers.
+              </p>
+            ) : phone !== "" && !/^\d+$/.test(phone) ? (
+              <p className="w-full text-center invalid:visible text-center text-red-500">Numbers only</p>
+            ) : phone !== "" && phone.length < 10 ? (
+              required === false && (
+                <p className="w-full text-center invalid:visible text-center text-red-500">
+                  Phone number must be at least 10 numbers
+                </p>
+              )
+            ) : null}
+            </div>
+        
+        <br />
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
-            Email
-          </span>
+        {required ? (<span className="font-semibold after:content-['*'] after:ml-0.5">
+        Input your Email
+          </span>):(<span className="font-semibold">Update Email</span>)}</label>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="w-full border-2 w-64 border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={emailHandler}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
-        </label>
+       
+       <div style={{ height: '0em' }}>
+       {email !== "" && !emailRegex.test(email) && (
+          <p className="text-center invalid:visible text-center text-red-500">
+            Please enter a valid email address.
+          </p>
+        )}
+        </div>
 
-        <label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
+        <br />
+
+        {/*<label className="h-[100px] w-[160px] border-[3px] border-dark rounded cursor-pointer flex flex-col items-center justify-center">
           {resumeFile || applicant?.resume_url ? (
             <span className="font-semibold">Update Resume</span>
           ) : (
             <span className="font-semibold after:content-['*'] after:ml-0.5">
               Upload Resume
             </span>
-          )}
+          )}</label>
           <GrDocumentUpload className="text-5xl mt-2" />
           <input
             type="file"
             accept="application/pdf"
             onChange={resumeHandler}
             className="hidden"
+            required={resumeFile || applicant?.resume_url ? false : true}
           />
-        </label>
+
+          {resumeFile ? null : (
+              <p className="text-center text-red-500">A resume is required</p>
+            )}*/}
+
+{/*Update colours and stuff in styles > globals.css */}
+<div className="fileUploadContainer">
+              <label
+                htmlFor="fileUpload"
+                className="text-center custom-file-upload hover:bg-primary"
+              ><i className="fa fa-file-arrow-up fileIcon"></i>
+                {required ? (
+                <span className="font-semibold after:content-['*'] after:ml-0.5">Upload Resume</span>
+              ) : (
+                <span className="font-semibold">
+                  Update Resume
+                </span>
+              )}</label>
+              {/*<GrDocumentUpload className="text-5xl mt-2" />*/}
+              <input
+                id="fileUpload"
+                type="file"
+                name="fileUpload"
+                onChange={resumeHandler}
+                required
+              />
+
+              {required ? <p className="text-center invalid:visible text-center text-red-500">A resume is required</p> : (
+                null
+              )}
+            </div>
+
+      
 
         {/* Preview resume */}
         {resumePreviewUrl && (
@@ -312,6 +389,7 @@ const Applicantdashboard = ({ applicant, onRefresh }) => {
             Create Profile
           </button>
         )}
+        </form>
       </div>
     </div>
   );

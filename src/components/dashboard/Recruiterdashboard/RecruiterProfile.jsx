@@ -12,6 +12,9 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
+  let emailRegex =
+  /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+
   // set applicant data to state
   useEffect(() => {
     if (recruiter && errorMessage === "") {
@@ -122,11 +125,11 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
         <h2 className="text-2xl font-semibold mb-6 text-dark">My Profile</h2>
 
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Company Name
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Company Name"
             value={companyName}
@@ -134,43 +137,87 @@ const RecruiterProfile = ({ recruiter, onRefresh }) => {
           />
         </label>
 
+        <div style={{ height: '0em' }}>
+        {companyName !== "" && companyName.length < 2 ? 
+          (<p className="text-center invalid:visible text-center text-red-500">Company name is required, needs to be at least 2 characters.</p>):(null)
+        }
+        </div>
+
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Name
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="text"
             placeholder="Name"
             value={name}
             onChange={nameHandler}
           />
         </label>
+
+        <div style={{ height: '0em' }}>
+        {name !== "" && name.length < 2 && (
+          <p className="text-center invalid:visible text-center text-red-500">Name is required, needs to be at least 2 characters.</p>
+        )}
+        </div>
+
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Phone
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
-            type="text"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
+            type="tel"
             placeholder="Phone"
+            id="phone"
             value={phone}
             onChange={phoneHandler}
+            required={true}
           />
         </label>
 
+          {/*Phone number validation */}
+          <div style={{ height: '0em' }}>
+          {phone !== "" &&
+            /^\d+$/.test(phone) &&
+            phone.length < 10 ? (
+              <p className="text-center invalid:visible text-center text-red-500">
+                Phone number is required. It must be at least 10 numbers.
+              </p>
+            ) : phone !== "" && !/^\d+$/.test(phone) ? (
+              <p className="text-center invalid:visible text-center text-red-500">Numbers only</p>
+            ) : null}
+            </div>
+
+        <br />
+
         <label>
-          <span className="font-semibold after:content-['*'] after:ml-0.5">
+          <span className="block font-semibold after:content-['*'] after:ml-0.5">
             Email
           </span>
           <input
-            className="w-full p-2 mb-4 border-[3px] border-dark rounded"
+            className="border-2 w-full border-gray-300 px-4 rounded-lg m-2 invalid:border-red-500 invalid:ring-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500"
             type="email"
             placeholder="you@example.com"
             value={email}
             onChange={emailHandler}
           />
         </label>
+
+        <div style={{ height: '0em' }}>
+        {email !== "" && !emailRegex.test(email) && (
+          <p className="text-center invalid:visible text-center text-red-500">
+            Entered Email address is invalid
+          </p>
+        )}
+        </div>
+
+        <br />
 
         {/* Error message */}
         {errorMessage && (
